@@ -98,6 +98,7 @@ Windows Registry Editor Version 5.00
 ; Cấu hình Cloudflare Gateway DNS hỗ trợ ECS (chặn quảng cáo bởi bộ lọc AdGuard và ABPVN)
 ; https://adguardteam.github.io/HostlistsRegistry/assets/filter_1.txt
 ; https://adguardteam.github.io/HostlistsRegistry/assets/filter_16.txt
+; https://raw.githubusercontent.com/bibicadotnet/AdGuard-Home-blocklists/refs/heads/main/byme.txt
 "DnsOverHttpsMode"="automatic"
 "DnsOverHttpsTemplates"="https://iabucttpma.cloudflare-gateway.com/dns-query{?dns}"
 
@@ -178,12 +179,10 @@ Windows Registry Editor Version 5.00
 
 [HKEY_CURRENT_USER\SOFTWARE\Policies\CocCoc\URLBlocklist]
 "1"="coccoc.com"
-"2"="qc.coccoc.com"
-"3"="qccdn.coccoc.com"
-"4"="cdn-qc.coccoc.com"
-"5"="qccoccocmedia.vn"
-"6"="catalog.qc.coccoc.com"
-"7"="qc-static.coccoc.com"
-"8"="ntrb.qc.coccoc.com"
-"9"="context.qc.coccoc.com"
-"10"="qcvod.coccoc.com"
+"2"="qccoccocmedia.vn"
+"3"="coccoc.telemetry.eyeo.com"
+"4"="metrics.coccoc.com"
+
+[HKEY_CURRENT_USER\SOFTWARE\Policies\CocCoc\URLAllowlist]
+"1"="accounts.coccoc.com"
+"2"="points.coccoc.com"
