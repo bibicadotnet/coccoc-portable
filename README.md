@@ -26,7 +26,7 @@ Cốc Cốc Portable Debloat là phiên bản trình duyệt Cốc Cốc chạy 
 <img src="https://img.bibica.net/AEPCJ6rI.png" alt="AEPCJ6rI">
 </p>
 
-Tùy thuộc bạn thích dùng bản mới nhất, hay các bản cũ hơn mà chọn phiên bản phù hợp (trang download sẽ hiện thị 5 nhánh gần nhất)
+- Tùy thuộc bạn thích dùng bản mới nhất, hay các bản cũ hơn mà chọn phiên bản phù hợp (trang download sẽ hiện thị 5 nhánh gần nhất)
 
 ### Debloat
 
@@ -54,8 +54,8 @@ Tùy thuộc bạn thích dùng bản mới nhất, hay các bản cũ hơn mà 
 <img src="https://img.bibica.net/Koy2oGJn.png" alt="Koy2oGJn">
 </p>
 
-Không tìm thấy cách Cốc Cốc đặt tên phiên bản ở chỗ nào, nên dùng tên theo Chromium version (nó sẽ không chính xác so với con số thể hiện ra ở `coccoc://version/`)
+- Không tìm thấy cách Cốc Cốc đặt tên phiên bản ở chỗ nào, nên dùng tên theo Chromium version (nó sẽ không chính xác so với con số thể hiện ra ở `coccoc://version/`)
 
 ### Fork dự án
 
-Bạn nào muốn cài đặt, mà hơi rén, không rõ tác giả có chỉnh sửa, cài đặt gì thêm vào không, có thể [fork](https://github.com/bibicadotnet/coccoc-portable/fork) dự án, bật chạy `Actions`, nó sẽ tự chạy mọi quá trình, thời gian build tầm 2-10 phút là xong, tự download release từ trang cá nhân về dùng cho an tâm
+- Bạn nào muốn cài đặt, mà hơi rén, không rõ tác giả có chỉnh sửa, cài đặt gì thêm vào không, có thể [fork](https://github.com/bibicadotnet/coccoc-portable/fork) dự án, bật chạy `Actions`, nó sẽ tự chạy mọi quá trình, thời gian build tầm 2-10 phút là xong, tự download release từ trang cá nhân về dùng cho an tâm
