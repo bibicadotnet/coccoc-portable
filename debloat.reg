@@ -178,9 +178,7 @@ Windows Registry Editor Version 5.00
 ;"nomnklagbgmgghhjidfhnoelnjfndfpd"="{\"update_url\":\"https://clients2.google.com/service/update2/crx\",\"installation_mode\":\"normal_installed\"}"
 
 [HKEY_CURRENT_USER\SOFTWARE\Policies\CocCoc\URLBlocklist]
-"1"="coccoc.com"
+"1"=".coccoc.com"
 
 [HKEY_CURRENT_USER\SOFTWARE\Policies\CocCoc\URLAllowlist]
-"1"="accounts.coccoc.com"
-"2"="points.coccoc.com"
-"3"="coccoc.com/search"
+"1"=".coccoc.com/search"
