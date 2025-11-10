@@ -89,18 +89,8 @@ Windows Registry Editor Version 5.00
 ; Tắt Spell check / Kiểm tra chính tả
 "SpellcheckEnabled"=dword:00000000
 
-; Cho phép tiếp tục hỗ trợ các tiện ích Manifest V2 (không còn hỗ trợ từ 139)
-; "ExtensionManifestV2Availability"=dword:00000002
-
 ; Tắt Help improve security on the web for everyone
 "SafeBrowsingExtendedReportingEnabled"=dword:00000000
-
-; Cấu hình Cloudflare Gateway DNS hỗ trợ ECS (chặn quảng cáo bởi bộ lọc AdGuard và ABPVN)
-; https://adguardteam.github.io/HostlistsRegistry/assets/filter_1.txt
-; https://adguardteam.github.io/HostlistsRegistry/assets/filter_16.txt
-; https://raw.githubusercontent.com/bibicadotnet/AdGuard-Home-blocklists/refs/heads/main/byme.txt
-"DnsOverHttpsMode"="automatic"
-"DnsOverHttpsTemplates"="https://iabucttpma.cloudflare-gateway.com/dns-query{?dns}"
 
 ; Hiển thị đầy đủ URL trên thanh địa chỉ
 "ShowFullUrlsInAddressBar"=dword:00000001
@@ -166,6 +156,10 @@ Windows Registry Editor Version 5.00
 ; Tắt hỗ trợ xử lý lỗi chính tả
 "SpellCheckServiceEnabled"=dword:00000000
 
+; Cấu hình Cloudflare Gateway DNS hỗ trợ ECS (chặn quảng cáo bởi bộ lọc AdGuard và ABPVN)
+"DnsOverHttpsMode"="automatic"
+"DnsOverHttpsTemplates"="https://iabucttpma.cloudflare-gateway.com/dns-query{?dns}"
+
 [HKEY_CURRENT_USER\SOFTWARE\Policies\CocCoc\ExtensionInstallBlocklist]
 "1"="gfgbmghkdjckppeomloefmbphdfmokgd"
 "2"="afaljjbleihmahhpckngondmgohleljb"
@@ -179,6 +173,19 @@ Windows Registry Editor Version 5.00
 
 [HKEY_CURRENT_USER\SOFTWARE\Policies\CocCoc\URLBlocklist]
 "1"=".coccoc.com"
+"2"="update.coccoc.com"
+"3"="afl.coccoc.com"
+"4"="afdk.coccoc.com"
+"5"="metrics.coccoc.com"
+"6"="qccoccocmedia.vn"
+"7"="coccoc.telemetry.eyeo.com"
+"8"="new-tab.coccoc.com"
+"9"="qc-static.coccoc.com"
+"10"="catalog.qc.coccoc.com"
+"11"="display.qc.coccoc.com"
 
 [HKEY_CURRENT_USER\SOFTWARE\Policies\CocCoc\URLAllowlist]
 "1"=".coccoc.com/search"
+
+; Cho phép tiếp tục hỗ trợ các tiện ích Manifest V2 (không còn hỗ trợ từ 139)
+; "ExtensionManifestV2Availability"=dword:00000002
