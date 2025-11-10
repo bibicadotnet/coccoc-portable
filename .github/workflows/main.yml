@@ -109,7 +109,7 @@ jobs:
       shell: powershell
       run: |
         try {
-          $chromePlusRelease = Invoke-RestMethod "https://api.github.com/repos/bibicadotnet/Chromium_SetDLL/releases/tags/1.13.2"
+          $chromePlusRelease = Invoke-RestMethod "https://api.github.com/repos/bibicadotnet/Chromium_SetDLL/releases/latest"
           $chromePlusVersion = $chromePlusRelease.tag_name
           echo "CHROMEPLUS_VERSION=$chromePlusVersion" >> $env:GITHUB_OUTPUT
           Write-Host "Chrome++ version: $chromePlusVersion"
@@ -159,7 +159,7 @@ jobs:
         $applicationPath = "C:\Program Files\CocCoc\Browser\Application"
         
         # Get Chrome++ release info
-        $chromePlusRelease = Invoke-RestMethod "https://api.github.com/repos/bibicadotnet/Chromium_SetDLL/releases/tags/1.13.2"
+        $chromePlusRelease = Invoke-RestMethod "https://api.github.com/repos/bibicadotnet/Chromium_SetDLL/releases/latest"
         $chromePlusDownloadUrl = $chromePlusRelease.assets | Where-Object { $_.name -eq "setdll.7z" } | Select-Object -First 1 -ExpandProperty browser_download_url
         
         # Prepare directories
