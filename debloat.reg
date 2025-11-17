@@ -157,7 +157,7 @@ Windows Registry Editor Version 5.00
 "SpellCheckServiceEnabled"=dword:00000000
 
 ; Cấu hình Cloudflare Gateway DNS hỗ trợ ECS (chặn quảng cáo bởi bộ lọc AdGuard và ABPVN)
-"DnsOverHttpsMode"="automatic"
+"DnsOverHttpsMode"="secure"
 "DnsOverHttpsTemplates"="https://iabucttpma.cloudflare-gateway.com/dns-query{?dns}"
 
 [HKEY_CURRENT_USER\SOFTWARE\Policies\CocCoc\ExtensionInstallBlocklist]
@@ -181,8 +181,7 @@ Windows Registry Editor Version 5.00
 "7"="coccoc.telemetry.eyeo.com"
 "8"="new-tab.coccoc.com"
 "9"="qc-static.coccoc.com"
-"10"="catalog.qc.coccoc.com"
-"11"="display.qc.coccoc.com"
+"10"="qc.coccoc.com"
 
 [HKEY_CURRENT_USER\SOFTWARE\Policies\CocCoc\URLAllowlist]
 "1"=".coccoc.com/search"
