@@ -1,0 +1,254 @@
+name: Cốc Cốc Portable Debloat
+
+on:
+  workflow_dispatch: 
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  check-and-build:
+    runs-on: windows-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Download and Install CocCoc
+      id: coccoc-install
+      shell: powershell
+      run: |
+        try {
+          $coccocUrl = "https://files1.coccoc.com/browser/x64/coccoc_en_machine.exe"
+          $coccocInstaller = "$env:TEMP\coccoc_standalone_en.exe"
+          
+          Write-Host "Downloading CocCoc..." -ForegroundColor Yellow
+          (New-Object System.Net.WebClient).DownloadFile($coccocUrl, $coccocInstaller)
+          
+          Write-Host "Installing CocCoc..." -ForegroundColor Yellow
+          Start-Process -FilePath $coccocInstaller -ArgumentList "/silent /install" -Wait
+
+        } catch {
+          Write-Error "Failed to download/install CocCoc: $($_.Exception.Message)"
+          exit 1
+        }
+        
+    - name: Get CocCoc version
+      id: coccoc-version
+      shell: powershell
+      run: |
+        try {
+          $coccocPath = "C:\Program Files\CocCoc\Browser\Application\browser.exe"
+          
+          if (-not (Test-Path $coccocPath)) {
+            Write-Error "CocCoc not found at expected location"
+            exit 1
+          }
+          
+          $coccocVersion = (Get-Item $coccocPath).VersionInfo.ProductVersion
+          echo "COCCOC_VERSION=$coccocVersion" >> $env:GITHUB_OUTPUT
+          Write-Host "CocCoc version: $coccocVersion"
+          
+          # Remove Installer directory
+          $installerPath = "C:\Program Files\CocCoc\Browser\Application\$coccocVersion\Installer"
+          if (Test-Path $installerPath) {
+            Remove-Item $installerPath -Recurse -Force
+            Write-Host "Removed Installer directory"
+          }
+          
+          # Clean up Extensions directory - keep only specified files
+          $extensionsPath = "C:\Program Files\CocCoc\Browser\Application\$coccocVersion\Extensions"
+          if (Test-Path $extensionsPath) {
+            $filesToKeep = @(
+              "jdfkmiabjpfjacifcmihfdjhpnjpiick.json",
+              "savior.crx"
+            )
+            
+            $allItems = Get-ChildItem $extensionsPath -Force
+            foreach ($item in $allItems) {
+              if ($item.Name -notin $filesToKeep) {
+                Remove-Item $item.FullName -Recurse -Force -ErrorAction SilentlyContinue
+                Write-Host "Removed from Extensions: $($item.Name)"
+              } else {
+                Write-Host "Kept file: $($item.Name)"
+              }
+            }
+          }
+          
+          # Remove Dictionaries directory
+          $dictionariesPath = "C:\Program Files\CocCoc\Browser\Application\$coccocVersion\Dictionaries"
+          if (Test-Path $dictionariesPath) {
+            Remove-Item $dictionariesPath -Recurse -Force
+            Write-Host "Removed Dictionaries directory"
+          }
+          
+          # Remove additional files and directories
+          $itemsToRemove = @(
+            "C:\Program Files\CocCoc\Browser\Application\SetupMetrics",
+            "C:\Program Files\CocCoc\Browser\Application\browser_proxy.exe",
+            "C:\Program Files\CocCoc\Browser\Application\VisualElementsManifest.xml"
+          )
+          
+          foreach ($item in $itemsToRemove) {
+            if (Test-Path $item) {
+              Remove-Item $item -Recurse -Force -ErrorAction SilentlyContinue
+              Write-Host "Removed: $item"
+            }
+          }
+          
+        } catch {
+          Write-Error "Failed to get CocCoc version: $($_.Exception.Message)"
+          exit 1
+        }
+
+    - name: Get latest Chrome++ version
+      id: chromeplus-version
+      shell: powershell
+      run: |
+        try {
+          $chromePlusRelease = Invoke-RestMethod "https://api.github.com/repos/bibicadotnet/chrome_plus/releases/latest"
+          $chromePlusVersion = $chromePlusRelease.tag_name
+          echo "CHROMEPLUS_VERSION=$chromePlusVersion" >> $env:GITHUB_OUTPUT
+          Write-Host "Chrome++ version: $chromePlusVersion"
+        } catch {
+          Write-Error "Failed to get Chrome++ version: $($_.Exception.Message)"
+          exit 1
+        }
+        
+    - name: Check if release exists
+      id: check-release
+      shell: powershell
+      run: |
+        $releaseTag = "coccoc-portable-x64_${{ steps.coccoc-version.outputs.COCCOC_VERSION }}_${{ steps.chromeplus-version.outputs.CHROMEPLUS_VERSION }}"
+        echo "RELEASE_TAG=$releaseTag" >> $env:GITHUB_OUTPUT
+        
+        try {
+          $headers = @{
+            'Authorization' = 'token ${{ secrets.GITHUB_TOKEN }}'
+            'Accept' = 'application/vnd.github.v3+json'
+          }
+          $response = Invoke-RestMethod -Uri "https://api.github.com/repos/${{ github.repository }}/releases/tags/$releaseTag" -Headers $headers -ErrorAction Stop
+          echo "RELEASE_EXISTS=true" >> $env:GITHUB_OUTPUT
+          Write-Host "Release $releaseTag already exists"
+        } catch {
+          if ($_.Exception.Response.StatusCode -eq 404) {
+            echo "RELEASE_EXISTS=false" >> $env:GITHUB_OUTPUT
+            Write-Host "Release $releaseTag does not exist, will create new one"
+          } else {
+            Write-Error "Error checking release: $($_.Exception.Message)"
+            exit 1
+          }
+        }
+        
+    - name: Build CocCoc Portable
+      if: steps.check-release.outputs.RELEASE_EXISTS == 'false'
+      shell: powershell
+      run: |
+        # Stop any CocCoc processes
+        Stop-Process -Name browser,coccoc -Force -ErrorAction SilentlyContinue
+        
+        Write-Host "Building CocCoc Portable with Chrome++" -ForegroundColor Green
+        
+        $releaseTag = "${{ steps.check-release.outputs.RELEASE_TAG }}"
+        $rootPath = "$env:GITHUB_WORKSPACE\CocCoc_Portable"
+        $portablePath = "$rootPath\CocCoc"
+        $tempDir = "$env:TEMP\CocCocBuilder"
+        $applicationPath = "C:\Program Files\CocCoc\Browser\Application"
+        
+        # Get Chrome++ release info
+        $chromePlusRelease = Invoke-RestMethod "https://api.github.com/repos/bibicadotnet/chrome_plus/releases/latest"
+        $chromePlusDownloadUrl = $chromePlusRelease.assets | Where-Object { $_.name -eq "setdll.7z" } | Select-Object -First 1 -ExpandProperty browser_download_url
+        
+        # Prepare directories
+        if (Test-Path $tempDir) { Remove-Item $tempDir -Recurse -Force }
+        New-Item -ItemType Directory -Path $tempDir -Force | Out-Null
+        if (Test-Path $rootPath) { Remove-Item $rootPath -Recurse -Force }
+        New-Item -ItemType Directory -Path $rootPath -Force | Out-Null
+        New-Item -ItemType Directory -Path $portablePath -Force | Out-Null
+        
+        # Download Chrome++ 7-zip and update.bat
+        Write-Host "Downloading Chrome++..." -ForegroundColor Yellow
+        (New-Object System.Net.WebClient).DownloadFile($chromePlusDownloadUrl, "$tempDir\setdll.7z")
+        (New-Object System.Net.WebClient).DownloadFile("https://www.7-zip.org/a/7zr.exe", "$tempDir\7zr.exe")
+
+        # Copy config files from project
+        Write-Host "Copying config files..." -ForegroundColor Yellow
+        Copy-Item "$env:GITHUB_WORKSPACE\chrome++.ini" "$applicationPath\chrome++.ini" -Force
+        Copy-Item "$env:GITHUB_WORKSPACE\update.bat" "$applicationPath\update.bat" -Force
+        Copy-Item "$env:GITHUB_WORKSPACE\debloat.reg" "$applicationPath\debloat.reg" -Force
+        Copy-Item "$env:GITHUB_WORKSPACE\default-apps-multi-profile.bat" "$applicationPath\default-apps-multi-profile.bat" -Force
+
+        # Extract Chrome++
+        Write-Host "Extracting Chrome++..." -ForegroundColor Yellow
+        $sevenZPath = "$tempDir\7zr.exe"
+        $chromePlusExtractDir = "$tempDir\chromeplus"
+        & $sevenZPath x "$tempDir\setdll.7z" "-o$chromePlusExtractDir" -y | Out-Null
+        
+        # Copy Chrome++ files to Application
+        Write-Host "Installing Chrome++..." -ForegroundColor Yellow
+        Copy-Item "$chromePlusExtractDir\setdll-x64.exe" "$applicationPath\setdll-x64.exe" -Force
+        Copy-Item "$chromePlusExtractDir\version-x64.dll" "$applicationPath\version.dll" -Force
+        
+        # Apply Chrome++
+        Write-Host "Applying Chrome++..." -ForegroundColor Yellow
+        Push-Location $applicationPath
+        & ".\setdll-x64.exe" /d:version.dll browser.exe | Out-Null
+        Pop-Location
+        
+        # Copy CocCoc files to portable directory
+        Write-Host "Copying CocCoc files..." -ForegroundColor Yellow
+        Copy-Item "$applicationPath\*" $portablePath -Recurse -Force
+        
+        # Cleanup temp files and Chrome++ installer files
+        Remove-Item $tempDir -Recurse -Force
+        Remove-Item "$applicationPath\setdll-x64.exe", "$applicationPath\browser.exe~" -Force -ErrorAction SilentlyContinue
+        Remove-Item "$portablePath\setdll-x64.exe", "$portablePath\browser.exe~" -Force -ErrorAction SilentlyContinue
+        
+        Write-Host "Build completed!" -ForegroundColor Green
+        
+    - name: Create ZIP archive
+      if: steps.check-release.outputs.RELEASE_EXISTS == 'false'
+      shell: powershell
+      run: |
+        $releaseTag = "${{ steps.check-release.outputs.RELEASE_TAG }}"
+        $zipPath = "$env:GITHUB_WORKSPACE\$releaseTag.zip"
+        $sourcePath = "$env:GITHUB_WORKSPACE\CocCoc_Portable"
+        
+        Compress-Archive -Path $sourcePath -DestinationPath $zipPath -CompressionLevel Optimal
+        Write-Host "Created archive: $zipPath"
+        
+        # Set output for next step
+        echo "ARCHIVE_PATH=$zipPath" >> $env:GITHUB_OUTPUT
+      id: create-archive
+        
+    - name: Create Release and Upload Asset
+      if: steps.check-release.outputs.RELEASE_EXISTS == 'false'
+      shell: powershell
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        $releaseTag = "${{ steps.check-release.outputs.RELEASE_TAG }}"
+        $coccocVersion = "${{ steps.coccoc-version.outputs.COCCOC_VERSION }}"
+        $chromePlusVersion = "${{ steps.chromeplus-version.outputs.CHROMEPLUS_VERSION }}"
+        $archivePath = "${{ steps.create-archive.outputs.ARCHIVE_PATH }}"
+        
+        # Create release body
+        # Create release body
+        $releaseBody = "**CocCoc Portable with Chrome++ Auto Build**`n`n**CocCoc Version:** $coccocVersion`n**Chrome++ Version:** $chromePlusVersion`n`n## What's Included`n- CocCoc Browser Portable`n- Chrome++ enhancements`n- Pre-configured settings`n`n## Installation`n1. Download the ZIP file`n2. Extract to your desired location`n3. Run CocCoc_Portable\CocCoc\browser.exe`n`n## Update`n1. Run CocCoc_Portable\CocCoc\update.bat`n2. Your settings and chrome++.ini configuration will be preserved`n`n## Features`n- Fully portable - no installation required`n- Enhanced with Chrome++ features`n- Auto-configured for optimal experience`n- Vietnamese browser with international support`n`n---`n*This release was automatically generated by GitHub Actions*"
+        
+        Write-Host "Creating release: $releaseTag" -ForegroundColor Yellow
+        $releaseTitle = "$releaseTag"
+        
+        gh release create $releaseTag --title $releaseTitle --notes $releaseBody --repo ${{ github.repository }} $archivePath
+          
+        Write-Host "Release created successfully!" -ForegroundColor Green
+        
+    - name: Summary
+      shell: powershell
+      run: |
+        if ("${{ steps.check-release.outputs.RELEASE_EXISTS }}" -eq "true") {
+          Write-Host "Release ${{ steps.check-release.outputs.RELEASE_TAG }} already exists - skipped" -ForegroundColor Yellow
+        } else {
+          Write-Host "Successfully created release ${{ steps.check-release.outputs.RELEASE_TAG }}" -ForegroundColor Green
+        }
