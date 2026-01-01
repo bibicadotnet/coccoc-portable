@@ -1,7 +1,9 @@
 name: Cốc Cốc Portable Debloat
 
 on:
-  workflow_dispatch: 
+  schedule:
+    - cron: '0 * * * *'  # Chạy mỗi giờ
+  workflow_dispatch:  # Cho phép chạy thủ công
 
 permissions:
   contents: write
