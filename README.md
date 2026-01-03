@@ -6,16 +6,17 @@
 
 Cốc Cốc Portable Debloat là phiên bản trình duyệt Cốc Cốc chạy trên Windows, đã được chuyển hoàn toàn sang di động, có thể chép dữ liệu sang thiết bị khác mà không mất dữ liệu, không cần cấu hình lại các plugin, history … kèm theo đó là debloat, tắt bớt các quảng cáo, giúp giao diện Cốc Cốc sạch như Chromium nguyên bản
 
+![](https://i.bibica.net/comment/20260102-024354.308.png)
+
 ### Các bước tối ưu bao gồm:
 - Xóa tiện ích mặc định (`Từ Điển`, `Rủng Rỉnh`)
-- Tắt `Side Panel`, `Split View`
 - Thay thế tab mới (`New Tab`) bằng trang sạch không quảng cáo
 - Tắt các tiến trình chạy ngầm và cập nhật tự động
 - Tắt 1 phần thông tin người dùng gửi tới Google hay Cốc Cốc
 - Thiết lập quyền riêng tư ở mức nghiêm ngặt, tắt cookie của bên thứ ba, tắt thông báo, tắt định vị, tắt cảm biến chuyển động
-- Sử dụng `Cloudflare Gateway DNS` hỗ trợ `ECS` (chặn quảng cáo bởi bộ lọc `AdGuard` và `ABPVN`) từ `v14x`
+- Sử dụng `Cloudflare Gateway DNS` hỗ trợ `ECS` (chặn quảng cáo bởi bộ lọc `AdGuard` và `ABPVN`)
 - Bật tính năng tiết kiệm RAM (`Balanced memory savings`)
-- Chặn hoàn toàn domain `coccoc.com`, `qccoccocmedia.vn`
+- Chặn trang chủ `coccoc.com`, không chặn các subdomain (dịch vụ phụ) của Cốc Cốc, có thể sử dụng CocCoc search mặc định bình thường
 
 ### Khuyết điểm?
 - Các video, auto chạy qua DRM sẽ gặp lỗi, tạm chưa có hướng xử lý, vì đã bypass Secure Preferences
@@ -23,7 +24,7 @@ Cốc Cốc Portable Debloat là phiên bản trình duyệt Cốc Cốc chạy 
 ### [Download Cốc Cốc Portable Debloat](https://coccoc.bibica.net/)
 
 <p align="center">
-<img src="https://img.bibica.net/AEPCJ6rI.png" alt="AEPCJ6rI">
+<img src="https://img.bibica.net/zKrwujXm.png" alt="zKrwujXm">
 </p>
 
 - Tùy thuộc bạn thích dùng bản mới nhất, hay các bản cũ hơn mà chọn phiên bản phù hợp (trang download sẽ hiện thị 5 nhánh gần nhất)
