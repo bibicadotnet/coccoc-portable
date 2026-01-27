@@ -13,6 +13,11 @@ Windows Registry Editor Version 5.00
 "AutofillPredictionSettings"=dword:00000002
 "HelpMeWriteSettings"=dword:00000002
 "AIModeSettings"=dword:00000001
+"CreateThemesSettings"=dword:00000002
+"HistorySearchSettings"=dword:00000002
+"TabCompareSettings"=dword:00000002
+"BuiltInDnsClientEnabled"=dword:00000000
+"DevToolsGenAiSettings"=dword:00000002
 
 ; Tắt Access Code Cast
 "AccessCodeCastEnabled"=dword:00000000
@@ -112,8 +117,8 @@ Windows Registry Editor Version 5.00
 ; Bật Memory Saver -> Balanced memory savings
 "MemorySaverModeSavings"=dword:00000001
 
-; Bật Preload pages
-"NetworkPredictionOptions"=dword:00000000
+; Bật Preload pages - Extended preloading
+"NetworkPredictionOptions"=dword:00000003
 
 ; Bật Use graphics acceleration when available
 "HardwareAccelerationModeEnabled"=dword:00000001
