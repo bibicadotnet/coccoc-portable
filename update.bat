@@ -1,6 +1,6 @@
 @echo off
 setlocal
-echo CocCoc Portable Updater v1.0
+echo CocCoc Portable Updater v1.1
 echo ================================
 echo.
 (
