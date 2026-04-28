@@ -14,14 +14,14 @@ echo try {
 echo   $currentVersion = if ^(Test-Path $coccocPath^) { ^(Get-Item $coccocPath^).VersionInfo.ProductVersion } else { "Not installed" }
 echo   $allReleases = Invoke-RestMethod -Uri $apiUrl
 echo   $channelReleases = $allReleases ^| Where-Object { $_.tag_name -like "coccoc-portable-x64_*" }
-echo   $latestRelease = $channelReleases ^| Sort-Object { try { [version]^($_.tag_name -split "_"^)^[1^] } catch { [version]"0.0.0.0" } }, { $_.published_at } -Descending ^| Select-Object -First 1
+echo   $latestRelease = $channelReleases ^| Sort-Object { if ^($_.tag_name -match "_([0-9.]+)_"^) { [version]$matches[1] } else { [version]"0.0.0.0" } }, { $_.published_at } -Descending ^| Select-Object -First 1
 echo   $latestVersion = ^($latestRelease.tag_name -split "_"^)^[1^]
 echo   $chromePlusVersion = ^($latestRelease.tag_name -split "_"^)^[2^]
 echo   $downloadUrl = ^($latestRelease.assets ^| Where-Object { $_.name -like "*.zip" } ^| Select-Object -First 1^).browser_download_url
 echo.
 echo   Write-Host "Current version: $currentVersion" -ForegroundColor Yellow
 echo   Write-Host "Latest version: $latestVersion " -ForegroundColor Yellow -NoNewline
-echo   Write-Host " [Chrome++ Version: $chromePlusVersion]" -ForegroundColor Gray
+echo   Write-Host " (Chrome++ Version: $chromePlusVersion)" -ForegroundColor Gray
 echo   Write-Host
 echo.
 echo   $confirm = Read-Host "Do you want to update? (y/N)"
@@ -47,9 +47,9 @@ echo   $extractedDir = Get-ChildItem $tempDir -Recurse -Directory ^| Where-Objec
 echo   $currentDir = "%~dp0"
 echo.
 echo   Write-Host "Updating files..."
-echo   if ^(Test-Path "browser.exe"^) { Remove-Item "browser.exe" -Force }
-echo   if ^(Test-Path "version.dll"^) { Remove-Item "version.dll" -Force }
-echo   if ^(Test-Path $currentVersion^) { Remove-Item $currentVersion -Recurse -Force }
+echo    if ^(Test-Path ^(Join-Path $currentDir "browser.exe"^)^) { Remove-Item ^(Join-Path $currentDir "browser.exe"^) -Force }
+echo    if ^(Test-Path ^(Join-Path $currentDir "version.dll"^)^) { Remove-Item ^(Join-Path $currentDir "version.dll"^) -Force }
+echo    if ^(Test-Path ^(Join-Path $currentDir $currentVersion^)^) { Remove-Item ^(Join-Path $currentDir $currentVersion^) -Recurse -Force }
 echo.
 echo   Get-ChildItem $extractedDir.FullName -Recurse ^| ForEach-Object {
 echo     $relativePath = $_.FullName.Substring^($extractedDir.FullName.Length + 1^)
