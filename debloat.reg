@@ -17,6 +17,50 @@ Windows Registry Editor Version 5.00
 "HistorySearchSettings"=dword:00000002
 "TabCompareSettings"=dword:00000002
 "DevToolsGenAiSettings"=dword:00000002
+"GoogleSearchSidePanelEnabled"=dword:00000000
+"BuiltInAIAPIsEnabled"=dword:00000000
+"SearchContentSharingSettings"=dword:00000001
+"GeminiActOnWebSettings"=dword:00000001
+
+; --- TELEMETRY ---
+"PrivacySandboxPromptEnabled"=dword:00000000
+"WebRtcEventLogCollectionAllowed"=dword:00000000
+"UserFeedbackAllowed"=dword:00000000
+"FeedbackSurveysEnabled"=dword:00000000
+"ChromeVariations"=dword:00000000
+
+; --- BLOAT & ANNOYANCES ---
+"HideWebStoreIcon"=dword:00000001
+"AllowDinosaurEasterEgg"=dword:00000000
+"ComponentUpdatesEnabled"=dword:00000000
+"SideSearchEnabled"=dword:00000000
+"DesktopSharingHubEnabled"=dword:00000000
+"EnableMediaRouter"=dword:00000000
+"QRCodeGeneratorEnabled"=dword:00000000
+"ShoppingListEnabled"=dword:00000000
+
+; --- MISC ---
+"PromotionsEnabled"=dword:00000000
+"TranslatorAPIAllowed"=dword:00000000
+"RemoteAccessHostRequireCurtain"=dword:00000001
+"RemoteAccessHostFirewallTraversal"=dword:00000000
+"RemoteAccessHostAllowClientPairing"=dword:00000000
+"DisableSafeBrowsingProceedAnyway"=dword:00000001
+"AdvancedProtectionAllowed"=dword:00000000
+"SavingBrowserHistoryDisabled"=dword:00000001
+"SafeSitesFilterBehavior"=dword:00000000
+"IntensiveWakeUpThrottlingEnabled"=dword:00000000
+"NTPMiddleSlotAnnouncementVisible"=dword:00000000
+"AutomatedPasswordChangeSettings"=dword:00000000
+"BoundSessionCredentialsEnabled"=dword:00000000
+"BasicAuthOverHttpEnabled"=dword:00000000
+"BrowserNetworkTimeQueriesEnabled"=dword:00000000
+"CACertificateManagementAllowed"=dword:00000000
+"CAPlatformIntegrationEnabled"=dword:00000000
+"WebRtcTextLogCollectionAllowed"=dword:00000000
+"RestrictCoreSharingOnRenderer"=dword:00000001
+"DomainReliabilityAllowed"=dword:00000000
+"ShowCastSessionsStartedByOtherDevices"=dword:00000000
 
 ; Tắt Access Code Cast
 "AccessCodeCastEnabled"=dword:00000000
@@ -33,9 +77,6 @@ Windows Registry Editor Version 5.00
 ; Tắt Kích hoạt cảnh báo bảo vệ mật khẩu
 "PasswordProtectionWarningTrigger"=dword:00000000
 
-; Tắt Máy tạo mã QR
-"QRCodeGeneratorEnabled"=dword:00000000
-
 ; Tắt Gỡ lỗi từ xa
 "RemoteDebuggingAllowed"=dword:00000000
 
@@ -51,18 +92,8 @@ Windows Registry Editor Version 5.00
 ; Tắt Khảo sát Safe Browsing
 "SafeBrowsingSurveysEnabled"=dword:00000000
 
-; Tắt Danh sách mua sắm
-"ShoppingListEnabled"=dword:00000000
-
-; Tắt Tìm kiếm bên cạnh (Side Search)
-"SideSearchEnabled"=dword:00000000
-
 ; Tắt Chặn đăng nhập trái phép
 "SigninInterceptionEnabled"=dword:00000000
-
-; Tắt Gửi phản hồi người dùng
-"UserFeedbackAllowed"=dword:00000000
-"FeedbackSurveysEnabled"=dword:00000000
 
 ; Tắt Make searches and browsing better
 "UrlKeyedAnonymizedDataCollectionEnabled"=dword:00000000
@@ -80,8 +111,6 @@ Windows Registry Editor Version 5.00
 
 ; Tắt "Continue running background apps when Chromium is closed"
 "BackgroundModeEnabled"=dword:00000000
-
-"PrivacySandboxPromptEnabled"=dword:00000000
 
 ; Tắt Spell check / Kiểm tra chính tả
 "SpellcheckEnabled"=dword:00000000
@@ -129,9 +158,6 @@ Windows Registry Editor Version 5.00
 "HttpsUpgradesEnabled"=dword:00000001
 "HttpsOnlyMode"="force_enabled"
 
-; The shopping list feature will not be available to users
-"ShoppingListEnabled"=dword:00000000
-
 ; Disable receiving Safe Browsing surveys
 "SafeBrowsingSurveysEnabled"=dword:00000000
 
@@ -143,9 +169,6 @@ Windows Registry Editor Version 5.00
 
 ; Disable the default browser check on startup
 "DefaultBrowserSettingEnabled"=dword:00000000
-
-; Tắt Tìm kiếm bên cạnh (Side Search)
-"SideSearchEnabled"=dword:00000000
 
 ; Tắt hỗ trợ xử lý lỗi chính tả
 "SpellCheckServiceEnabled"=dword:00000000
