@@ -489,38 +489,41 @@ border-radius: 50% !important;
         return `${day}/${month}/${year}`;
     }
 
-    function displayReleases(releases) {
-        if (releases.length === 0) {
-            document.getElementById('versions-content').innerHTML = 
-                '<div class="error">Không tìm thấy phiên bản nào.</div>';
-            return;
-        }
+	function displayReleases(releases) {
+		if (releases.length === 0) {
+			document.getElementById('versions-content').innerHTML = 
+				'<div class="error">Không tìm thấy phiên bản nào.</div>';
+			return;
+		}
 
-        let html = '<ul class="version-list">';
-        
-        releases.forEach((release, index) => {
-            const downloadUrl = `https://github.com/bibicadotnet/coccoc-portable/releases/download/${release.tag_name}/${release.tag_name}.zip`;
-            const isLatest = index === 0;
-            const statusClass = isLatest ? 'status-current' : 'status-outdated';
-            const releaseDate = formatDate(release.published_at);
-            
-            html += `
-                <li class="version-item">
-                    <div class="version-info">
-                        <h3>Cốc Cốc Portable ${release.majorVersion}.x</h3>
-                        <div class="version-status">
-                            <span class="status-dot ${statusClass}"></span>
-                            Ngày phát hành: ${releaseDate}
-                        </div>
-                    </div>
-                    <a href="${downloadUrl}" class="version-number" target="_blank">${release.fullVersion}</a>
-                </li>
-            `;
-        });
-        
-        html += '</ul>';
-        document.getElementById('versions-content').innerHTML = html;
-    }
+		let html = '<ul class="version-list">';
+		
+		releases.forEach((release, index) => {
+			// Tìm file .zip trong danh sách assets của release đó
+			const asset = release.assets.find(a => a.name.endsWith('.zip'));
+			const downloadUrl = asset ? asset.browser_download_url : '#';
+			
+			const isLatest = index === 0;
+			const statusClass = isLatest ? 'status-current' : 'status-outdated';
+			const releaseDate = formatDate(release.published_at);
+			
+			html += `
+				<li class="version-item">
+					<div class="version-info">
+						<h3>Cốc Cốc Portable ${release.majorVersion}.x</h3>
+						<div class="version-status">
+							<span class="status-dot ${statusClass}"></span>
+							Ngày phát hành: ${releaseDate}
+						</div>
+					</div>
+					<a href="${downloadUrl}" class="version-number" target="_blank">${release.fullVersion}</a>
+				</li>
+			`;
+		});
+		
+		html += '</ul>';
+		document.getElementById('versions-content').innerHTML = html;
+	}
 
     // Tải dữ liệu khi trang được load
     document.addEventListener('DOMContentLoaded', function() {
