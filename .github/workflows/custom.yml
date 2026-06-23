@@ -50,7 +50,7 @@ jobs:
               $installerPath = "$tempDir\coccocsetup.exe"
               
               Write-Host "Downloading the installer..." -ForegroundColor Yellow
-              Invoke-WebRequest -Uri $directExeUrl -OutFile $installerPath -UseBasicParsing
+              (New-Object System.Net.WebClient).DownloadFile($directExeUrl, $installerPath)
 
               # Use 7-Zip available on Github Actions windows-latest to extract the .exe
               Write-Host "Extracting the exe file..." -ForegroundColor Yellow
