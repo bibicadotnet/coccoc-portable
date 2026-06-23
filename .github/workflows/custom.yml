@@ -40,14 +40,19 @@ jobs:
           $updater = $updaterPaths | Where-Object { Test-Path $_ } | Select-Object -First 1
           
           if ($updater) {
-              Start-Process -FilePath $updater -ArgumentList "/update" -Wait
-              Write-Host "Cốc Cốc đã được cập nhật ngầm lên bản mới nhất!" -ForegroundColor Green
+              # Run the update silently without -Wait since the initial process forks and exits
+              Start-Process -FilePath $updater -ArgumentList "/update /silent"
+              
+              # Wait for the background update process to finish completely
+              Wait-Process -Name "CocCocUpdate" -ErrorAction SilentlyContinue
+              
+              Write-Host "CocCoc has been successfully updated to the latest version!" -ForegroundColor Green
           } else {
-              Write-Host "Warning: Không tìm thấy trình cập nhật." -ForegroundColor Yellow
+              Write-Host "Warning: Updater not found." -ForegroundColor Yellow
           }
 
         } catch {
-          Write-Error "Lỗi quá trình tải/cài đặt: $($_.Exception.Message)"
+          Write-Error "Failed during download/install: $($_.Exception.Message)"
           exit 1
         }
         
