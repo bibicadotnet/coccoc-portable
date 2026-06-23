@@ -31,7 +31,7 @@ jobs:
           Write-Host "Downloaded installer size: $installerSize bytes"
 
           Write-Host "Launching installer..." -ForegroundColor Yellow
-          $proc = Start-Process -FilePath $coccocInstaller -ArgumentList "--system-level --do-not-launch-chrome" -PassThru
+          $proc = Start-Process -FilePath $coccocInstaller -ArgumentList "--system-level --verbose-logging" -PassThru
           Write-Host "Installer PID: $($proc.Id)"
 
           $coccocExe = "C:\Program Files\CocCoc\Browser\Application\browser.exe"
@@ -46,7 +46,12 @@ jobs:
 
           if (-not (Test-Path $coccocExe)) {
             Write-Error "Timed out after $timeout s — browser.exe never appeared"
-            Write-Host "Contents of C:\Program Files\CocCoc (if any):"
+            Write-Host "=== Installer log files in TEMP ==="
+            Get-ChildItem "$env:TEMP" -Filter "*.log" -ErrorAction SilentlyContinue | Sort-Object LastWriteTime -Descending | Select-Object -First 5 | ForEach-Object {
+              Write-Host "--- $($_.FullName) ---"
+              Get-Content $_.FullName -Tail 50 -ErrorAction SilentlyContinue
+            }
+            Write-Host "=== Contents of C:\Program Files\CocCoc (if any) ==="
             Get-ChildItem "C:\Program Files\CocCoc" -Recurse -ErrorAction SilentlyContinue | Select-Object FullName
             exit 1
           }
