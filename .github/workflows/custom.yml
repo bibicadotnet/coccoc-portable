@@ -22,14 +22,36 @@ jobs:
       shell: powershell
       run: |
         try {
-          $coccocUrl = "https://files.coccoc.com/browser/x64/coccoc_standalone_en.exe"
-          $coccocInstaller = "$env:TEMP\coccoc_standalone_en.exe"
-          
-          Write-Host "Downloading CocCoc..." -ForegroundColor Yellow
+          $coccocUrl = "https://files1.coccoc.com/browser/x64/coccoc_en_machine.exe"
+          $coccocInstaller = "$env:TEMP\coccoc_en_machine.exe"
+
+          Write-Host "Downloading CocCoc from $coccocUrl ..." -ForegroundColor Yellow
           (New-Object System.Net.WebClient).DownloadFile($coccocUrl, $coccocInstaller)
-          
-          Write-Host "Installing CocCoc..." -ForegroundColor Yellow
-          Start-Process -FilePath $coccocInstaller -ArgumentList "/silent /install" -Wait
+          $installerSize = (Get-Item $coccocInstaller).Length
+          Write-Host "Downloaded installer size: $installerSize bytes"
+
+          Write-Host "Launching installer..." -ForegroundColor Yellow
+          $proc = Start-Process -FilePath $coccocInstaller -ArgumentList "--system-level --do-not-launch-chrome" -PassThru
+          Write-Host "Installer PID: $($proc.Id)"
+
+          $coccocExe = "C:\Program Files\CocCoc\Browser\Application\browser.exe"
+          $timeout = 300
+          $elapsed = 0
+          while (-not (Test-Path $coccocExe) -and $elapsed -lt $timeout) {
+            Start-Sleep -Seconds 5
+            $elapsed += 5
+            $procAlive = if ($proc.HasExited) { "exited (code $($proc.ExitCode))" } else { "running" }
+            Write-Host "[$elapsed/$timeout s] browser.exe not found yet — installer $procAlive"
+          }
+
+          if (-not (Test-Path $coccocExe)) {
+            Write-Error "Timed out after $timeout s — browser.exe never appeared"
+            Write-Host "Contents of C:\Program Files\CocCoc (if any):"
+            Get-ChildItem "C:\Program Files\CocCoc" -Recurse -ErrorAction SilentlyContinue | Select-Object FullName
+            exit 1
+          }
+
+          Write-Host "CocCoc installed successfully!" -ForegroundColor Green
 
         } catch {
           Write-Error "Failed to download/install CocCoc: $($_.Exception.Message)"
