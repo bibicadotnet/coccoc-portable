@@ -22,7 +22,7 @@ jobs:
       shell: powershell
       run: |
         try {
-          $coccocUrl = "https://files.coccoc.com/browser/x64/coccoc_standalone_en.exe"
+          $coccocUrl = "https://files2.coccoc.com/apps/browser/win/x64/148.0.7778.260/148.0.7778.260_coccocsetup.exe"
 
           $coccocInstaller = "$env:TEMP\coccoc_standalone_en.exe"
           
