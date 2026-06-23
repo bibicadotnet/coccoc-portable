@@ -30,7 +30,7 @@ jobs:
           (New-Object System.Net.WebClient).DownloadFile($coccocUrl, $coccocInstaller)
           
           Write-Host "Installing CocCoc..." -ForegroundColor Yellow
-          Start-Process -FilePath $coccocInstaller -ArgumentList "/silent /install" -Wait
+          Start-Process -FilePath $coccocInstaller -ArgumentList "/S" -Wait
 
         } catch {
           Write-Error "Failed to download/install CocCoc: $($_.Exception.Message)"
