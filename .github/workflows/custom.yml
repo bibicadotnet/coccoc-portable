@@ -25,16 +25,28 @@ jobs:
           $coccocUrl = "https://files1.coccoc.com/browser/x64/coccoc_en_machine.exe"
           $coccocInstaller = "$env:TEMP\coccoc_en_machine.exe"
 
-          Write-Host "Downloading CocCoc from $coccocUrl ..." -ForegroundColor Yellow
+          Write-Host "Downloading CocCoc installer..." -ForegroundColor Yellow
           (New-Object System.Net.WebClient).DownloadFile($coccocUrl, $coccocInstaller)
-          Write-Host "Downloaded installer size: $((Get-Item $coccocInstaller).Length) bytes"
 
-          # Extract strings từ binary để tìm URL update/download
-          Write-Host "=== URLs found in installer binary ===" -ForegroundColor Yellow
+          # Grep GUIDs từ binary
+          Write-Host "=== GUIDs found in installer binary ===" -ForegroundColor Yellow
           $bytes = [System.IO.File]::ReadAllBytes($coccocInstaller)
           $text = [System.Text.Encoding]::ASCII.GetString($bytes)
-          $urls = [regex]::Matches($text, 'https?://[a-zA-Z0-9\-._/?=&%+#]+') | Select-Object -ExpandProperty Value | Sort-Object -Unique
-          $urls | Where-Object { $_ -match "coccoc|update|download|install|omaha" } | ForEach-Object { Write-Host $_ }
+          $guids = [regex]::Matches($text, '\{[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}\}') | Select-Object -ExpandProperty Value | Sort-Object -Unique
+          $guids | ForEach-Object { Write-Host $_ }
+
+          # POST lên update server với từng GUID, dump response
+          Write-Host "=== Querying update server ===" -ForegroundColor Yellow
+          foreach ($guid in $guids) {
+            $body = "{`"request`":{`"protocol`":`"3.0`",`"app`":[{`"appid`":`"$guid`",`"version`":`"0.0.0.0`",`"updatecheck`":{}}]}}"
+            try {
+              $resp = Invoke-WebRequest -Uri "https://update.coccoc.com/service/update2/json" -Method POST -Body $body -ContentType "application/json" -UseBasicParsing -TimeoutSec 10
+              if ($resp.Content -match "url|download|http") {
+                Write-Host "=== Hit with appid $guid ==="
+                Write-Host $resp.Content
+              }
+            } catch {}
+          }
 
         } catch {
           Write-Error "Failed: $($_.Exception.Message)"
