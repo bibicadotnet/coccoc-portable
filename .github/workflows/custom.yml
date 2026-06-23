@@ -17,26 +17,35 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
       
-    - name: Download and Install CocCoc
+    - name: Download and Force Install CocCoc
       id: coccoc-install
       shell: powershell
       run: |
-        try {
-          $coccocUrl = "https://files.coccoc.com/browser/x64/coccoc_standalone_en.exe"
+        $coccocUrl = "https://files1.coccoc.com/browser/x64/coccoc_en_machine.exe"
+        $coccocInstaller = "$env:TEMP\coccoc_latest.exe"
+        (New-Object System.Net.WebClient).DownloadFile($coccocUrl, $coccocInstaller)
 
-          $coccocInstaller = "$env:TEMP\coccoc_standalone_en.exe"
-          
-          Write-Host "Downloading CocCoc..." -ForegroundColor Yellow
-          (New-Object System.Net.WebClient).DownloadFile($coccocUrl, $coccocInstaller)
-          
-          Write-Host "Installing CocCoc..." -ForegroundColor Yellow
-          Start-Process -FilePath $coccocInstaller -ArgumentList "/silent /install" -Wait
-
-        } catch {
-          Write-Error "Failed to download/install CocCoc: $($_.Exception.Message)"
-          exit 1
+        # Chạy file nhưng không dùng -Wait
+        $proc = Start-Process -FilePath $coccocInstaller -PassThru
+        
+        # Đợi 5 giây cho cửa sổ cài đặt hiện lên
+        Start-Sleep -Seconds 5
+        
+        # Dùng đối tượng COM để gửi lệnh nhấn phím "Enter" vào cửa sổ đang active
+        $wshell = New-Object -ComObject WScript.Shell
+        Write-Host "Sending Enter key to installer..."
+        $wshell.SendKeys("{ENTER}")
+        
+        # Chờ file browser.exe xuất hiện rồi kill tiến trình
+        $target = "C:\Program Files\CocCoc\Browser\Application\browser.exe"
+        $timeout = 120
+        $stopwatch = [System.Diagnostics.Stopwatch]::StartNew()
+        
+        while (-not (Test-Path $target) -and $stopwatch.Elapsed.TotalSeconds -lt $timeout) {
+            Start-Sleep -Seconds 5
         }
         
+        Stop-Process -Id $proc.Id -Force -ErrorAction SilentlyContinue
     - name: Get CocCoc version
       id: coccoc-version
       shell: powershell
