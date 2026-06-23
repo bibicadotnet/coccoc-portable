@@ -315,7 +315,7 @@ border-radius: 50% !important;
                 <h2>📁 Các file và công dụng</h2>
                 <div class="features">
                     <ul>
-                        <li><strong>chrome++.ini</strong>: File cấu hình cho <a href="https://github.com/Bush2021/chrome_plus" target="_blank">Chrome++</a></li>
+                        <li><strong>chrome++.ini</strong>: File cấu hình cho <a href="https://github.com/bibicadotnet/chrome-next-mini" target="_blank">Chrome Next Mini</a></li>
                         <li><strong>debloater.reg</strong>: Loại bỏ các tính năng không cần thiết của Cốc Cốc</li>
                         <li><strong>default-apps-multi-profile.bat</strong>: Đặt Cốc Cốc làm trình duyệt mặc định</li>
                         <li><strong>update.bat</strong>: Cập nhật lên phiên bản mới nhất</li>
@@ -489,41 +489,38 @@ border-radius: 50% !important;
         return `${day}/${month}/${year}`;
     }
 
-	function displayReleases(releases) {
-		if (releases.length === 0) {
-			document.getElementById('versions-content').innerHTML = 
-				'<div class="error">Không tìm thấy phiên bản nào.</div>';
-			return;
-		}
+    function displayReleases(releases) {
+        if (releases.length === 0) {
+            document.getElementById('versions-content').innerHTML = 
+                '<div class="error">Không tìm thấy phiên bản nào.</div>';
+            return;
+        }
 
-		let html = '<ul class="version-list">';
-		
-		releases.forEach((release, index) => {
-			// Tìm file .zip trong danh sách assets của release đó
-			const asset = release.assets.find(a => a.name.endsWith('.zip'));
-			const downloadUrl = asset ? asset.browser_download_url : '#';
-			
-			const isLatest = index === 0;
-			const statusClass = isLatest ? 'status-current' : 'status-outdated';
-			const releaseDate = formatDate(release.published_at);
-			
-			html += `
-				<li class="version-item">
-					<div class="version-info">
-						<h3>Cốc Cốc Portable ${release.majorVersion}.x</h3>
-						<div class="version-status">
-							<span class="status-dot ${statusClass}"></span>
-							Ngày phát hành: ${releaseDate}
-						</div>
-					</div>
-					<a href="${downloadUrl}" class="version-number" target="_blank">${release.fullVersion}</a>
-				</li>
-			`;
-		});
-		
-		html += '</ul>';
-		document.getElementById('versions-content').innerHTML = html;
-	}
+        let html = '<ul class="version-list">';
+        
+        releases.forEach((release, index) => {
+            const downloadUrl = `https://github.com/bibicadotnet/coccoc-portable/releases/download/${release.tag_name}/${release.tag_name}.zip`;
+            const isLatest = index === 0;
+            const statusClass = isLatest ? 'status-current' : 'status-outdated';
+            const releaseDate = formatDate(release.published_at);
+            
+            html += `
+                <li class="version-item">
+                    <div class="version-info">
+                        <h3>Cốc Cốc Portable ${release.majorVersion}.x</h3>
+                        <div class="version-status">
+                            <span class="status-dot ${statusClass}"></span>
+                            Ngày phát hành: ${releaseDate}
+                        </div>
+                    </div>
+                    <a href="${downloadUrl}" class="version-number" target="_blank">${release.fullVersion}</a>
+                </li>
+            `;
+        });
+        
+        html += '</ul>';
+        document.getElementById('versions-content').innerHTML = html;
+    }
 
     // Tải dữ liệu khi trang được load
     document.addEventListener('DOMContentLoaded', function() {
