@@ -17,23 +17,37 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
       
-    - name: Download and Install CocCoc
+    - name: Download, Install and Force Update CocCoc
       id: coccoc-install
       shell: powershell
       run: |
         try {
-          $coccocUrl = "https://files2.coccoc.com/browser/x64/coccoc_en_machine.exe"
-
+          $coccocOldUrl = "https://files.coccoc.com/browser/x64/coccoc_standalone_en.exe"
           $coccocInstaller = "$env:TEMP\coccoc_standalone_en.exe"
           
-          Write-Host "Downloading CocCoc..." -ForegroundColor Yellow
-          (New-Object System.Net.WebClient).DownloadFile($coccocUrl, $coccocInstaller)
+          Write-Host "Downloading CocCoc Standalone..." -ForegroundColor Yellow
+          (New-Object System.Net.WebClient).DownloadFile($coccocOldUrl, $coccocInstaller)
           
-          Write-Host "Installing CocCoc..." -ForegroundColor Yellow
-          Start-Process -FilePath $coccocInstaller -ArgumentList "--silent --system-level" -Wait
+          Write-Host "Installing CocCoc silently..." -ForegroundColor Yellow
+          Start-Process -FilePath $coccocInstaller -ArgumentList "/silent /install" -Wait
+          
+          Write-Host "Forcing background update to the LATEST version..." -ForegroundColor Yellow
+          $updaterPaths = @(
+              "C:\Program Files\CocCoc\Update\CocCocUpdate.exe",
+              "C:\Program Files (x86)\CocCoc\Update\CocCocUpdate.exe"
+          )
+          
+          $updater = $updaterPaths | Where-Object { Test-Path $_ } | Select-Object -First 1
+          
+          if ($updater) {
+              Start-Process -FilePath $updater -ArgumentList "/update" -Wait
+              Write-Host "Cốc Cốc đã được cập nhật ngầm lên bản mới nhất!" -ForegroundColor Green
+          } else {
+              Write-Host "Warning: Không tìm thấy trình cập nhật." -ForegroundColor Yellow
+          }
 
         } catch {
-          Write-Error "Failed to download/install CocCoc: $($_.Exception.Message)"
+          Write-Error "Lỗi quá trình tải/cài đặt: $($_.Exception.Message)"
           exit 1
         }
         
