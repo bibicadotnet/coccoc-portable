@@ -17,42 +17,23 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
       
-    - name: Download, Install and Force Update CocCoc
+    - name: Download and Install CocCoc
       id: coccoc-install
       shell: powershell
       run: |
         try {
-          $coccocOldUrl = "https://files.coccoc.com/browser/x64/coccoc_standalone_en.exe"
+          $coccocUrl = "https://files.coccoc.com/browser/x64/coccoc_standalone_en.exe"
+
           $coccocInstaller = "$env:TEMP\coccoc_standalone_en.exe"
           
-          Write-Host "Downloading CocCoc Standalone..." -ForegroundColor Yellow
-          (New-Object System.Net.WebClient).DownloadFile($coccocOldUrl, $coccocInstaller)
+          Write-Host "Downloading CocCoc..." -ForegroundColor Yellow
+          (New-Object System.Net.WebClient).DownloadFile($coccocUrl, $coccocInstaller)
           
-          Write-Host "Installing CocCoc silently..." -ForegroundColor Yellow
+          Write-Host "Installing CocCoc..." -ForegroundColor Yellow
           Start-Process -FilePath $coccocInstaller -ArgumentList "/silent /install" -Wait
-          
-          Write-Host "Forcing background update to the LATEST version..." -ForegroundColor Yellow
-          $updaterPaths = @(
-              "C:\Program Files\CocCoc\Update\CocCocUpdate.exe",
-              "C:\Program Files (x86)\CocCoc\Update\CocCocUpdate.exe"
-          )
-          
-          $updater = $updaterPaths | Where-Object { Test-Path $_ } | Select-Object -First 1
-          
-          if ($updater) {
-              # Run the update silently without -Wait since the initial process forks and exits
-              Start-Process -FilePath $updater -ArgumentList "/update /silent"
-              
-              # Wait for the background update process to finish completely
-              Wait-Process -Name "CocCocUpdate" -ErrorAction SilentlyContinue
-              
-              Write-Host "CocCoc has been successfully updated to the latest version!" -ForegroundColor Green
-          } else {
-              Write-Host "Warning: Updater not found." -ForegroundColor Yellow
-          }
 
         } catch {
-          Write-Error "Failed during download/install: $($_.Exception.Message)"
+          Write-Error "Failed to download/install CocCoc: $($_.Exception.Message)"
           exit 1
         }
         
