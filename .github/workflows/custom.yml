@@ -27,39 +27,17 @@ jobs:
 
           Write-Host "Downloading CocCoc from $coccocUrl ..." -ForegroundColor Yellow
           (New-Object System.Net.WebClient).DownloadFile($coccocUrl, $coccocInstaller)
-          $installerSize = (Get-Item $coccocInstaller).Length
-          Write-Host "Downloaded installer size: $installerSize bytes"
+          Write-Host "Downloaded installer size: $((Get-Item $coccocInstaller).Length) bytes"
 
-          Write-Host "Launching installer..." -ForegroundColor Yellow
-          $proc = Start-Process -FilePath $coccocInstaller -ArgumentList "--system-level --verbose-logging" -PassThru
-          Write-Host "Installer PID: $($proc.Id)"
-
-          $coccocExe = "C:\Program Files\CocCoc\Browser\Application\browser.exe"
-          $timeout = 300
-          $elapsed = 0
-          while (-not (Test-Path $coccocExe) -and $elapsed -lt $timeout) {
-            Start-Sleep -Seconds 5
-            $elapsed += 5
-            $procAlive = if ($proc.HasExited) { "exited (code $($proc.ExitCode))" } else { "running" }
-            Write-Host "[$elapsed/$timeout s] browser.exe not found yet — installer $procAlive"
-          }
-
-          if (-not (Test-Path $coccocExe)) {
-            Write-Error "Timed out after $timeout s — browser.exe never appeared"
-            Write-Host "=== Installer log files in TEMP ==="
-            Get-ChildItem "$env:TEMP" -Filter "*.log" -ErrorAction SilentlyContinue | Sort-Object LastWriteTime -Descending | Select-Object -First 5 | ForEach-Object {
-              Write-Host "--- $($_.FullName) ---"
-              Get-Content $_.FullName -Tail 50 -ErrorAction SilentlyContinue
-            }
-            Write-Host "=== Contents of C:\Program Files\CocCoc (if any) ==="
-            Get-ChildItem "C:\Program Files\CocCoc" -Recurse -ErrorAction SilentlyContinue | Select-Object FullName
-            exit 1
-          }
-
-          Write-Host "CocCoc installed successfully!" -ForegroundColor Green
+          # Extract strings từ binary để tìm URL update/download
+          Write-Host "=== URLs found in installer binary ===" -ForegroundColor Yellow
+          $bytes = [System.IO.File]::ReadAllBytes($coccocInstaller)
+          $text = [System.Text.Encoding]::ASCII.GetString($bytes)
+          $urls = [regex]::Matches($text, 'https?://[a-zA-Z0-9\-._/?=&%+#]+') | Select-Object -ExpandProperty Value | Sort-Object -Unique
+          $urls | Where-Object { $_ -match "coccoc|update|download|install|omaha" } | ForEach-Object { Write-Host $_ }
 
         } catch {
-          Write-Error "Failed to download/install CocCoc: $($_.Exception.Message)"
+          Write-Error "Failed: $($_.Exception.Message)"
           exit 1
         }
         
