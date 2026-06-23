@@ -2,8 +2,8 @@ name: Cốc Cốc Portable Debloat
 
 on:
   schedule:
-    - cron: '0 * * * *'  # Chạy mỗi giờ
-  workflow_dispatch:  # Cho phép chạy thủ công
+    - cron: '0 * * * *'  # Run every hour
+  workflow_dispatch:  # Allow manual trigger
 
 permissions:
   contents: write
@@ -17,23 +17,74 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
       
-    - name: Download and Install CocCoc
+    - name: Download and Extract CocCoc
       id: coccoc-install
       shell: powershell
       run: |
+        [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+        $updateUrl = "https://update.coccoc.com/service/update2/json"
+        $body = '{"request":{"@os":"win","@updater":"CocCocUpdater","acceptformat":"crx3,download","protocol":"4.0","os":{"arch":"x86_64","platform":"Windows","version":"10.0"},"updaterversion":"148.0.7778.254","apps":[{"appid":"{C0CC0CBB-47DD-46FF-A04D-7011A06486E1}","version":"0.0.0.0","ap":"arch_x64","updatecheck":{}}]}}'
+        $headers = @{
+            "User-Agent" = "CocCocUpdater/148.0.7778.254"
+            "Accept"     = "application/json"
+        }
+
         try {
-          $coccocUrl = "https://files.coccoc.com/browser/x64/coccoc_standalone_en.exe"
-
-          $coccocInstaller = "$env:TEMP\coccoc_standalone_en.exe"
+          Write-Host "Querying for the latest CocCoc version..." -ForegroundColor Yellow
+          $resp = Invoke-WebRequest -Uri $updateUrl -Method POST -Body $body -ContentType "application/json" -Headers $headers -UseBasicParsing
           
-          Write-Host "Downloading CocCoc..." -ForegroundColor Yellow
-          (New-Object System.Net.WebClient).DownloadFile($coccocUrl, $coccocInstaller)
-          
-          Write-Host "Installing CocCoc..." -ForegroundColor Yellow
-          Start-Process -FilePath $coccocInstaller -ArgumentList "/silent /install" -Wait
+          $rawContent = $resp.Content
+          if ($rawContent.StartsWith(")]}'")) { $rawContent = $rawContent.Substring(4) }
+          $json = $rawContent | ConvertFrom-Json
+          $updateCheck = $json.response.apps[0].updatecheck
 
+          if ($updateCheck.status -eq "ok") {
+              $nextVersion = $updateCheck.nextversion
+              $directExeUrl = "https://files2.coccoc.com/apps/browser/win/x64/$nextVersion/$($nextVersion)_coccocsetup.exe"
+              Write-Host "Found version: $nextVersion" -ForegroundColor Cyan
+              Write-Host "Direct download link: $directExeUrl" -ForegroundColor Green
+
+              # Create a temporary directory for extraction
+              $tempDir = "$env:TEMP\coccoc_dl"
+              New-Item -ItemType Directory -Path $tempDir -Force | Out-Null
+              $installerPath = "$tempDir\coccocsetup.exe"
+              
+              Write-Host "Downloading the installer..." -ForegroundColor Yellow
+              Invoke-WebRequest -Uri $directExeUrl -OutFile $installerPath -UseBasicParsing
+
+              # Use 7-Zip available on Github Actions windows-latest to extract the .exe
+              Write-Host "Extracting the exe file..." -ForegroundColor Yellow
+              & "C:\Program Files\7-Zip\7z.exe" x $installerPath "-o$tempDir\ext1" -y | Out-Null
+
+              # Find and extract the inner .7z file (standard Chromium Installer structure)
+              $sevenZFile = Get-ChildItem -Path "$tempDir\ext1" -Filter "*.7z" | Select-Object -First 1
+              if ($sevenZFile) {
+                  Write-Host "Found $($sevenZFile.Name), continuing extraction..." -ForegroundColor Yellow
+                  & "C:\Program Files\7-Zip\7z.exe" x $sevenZFile.FullName "-o$tempDir\ext2" -y | Out-Null
+                  $searchPath = "$tempDir\ext2"
+              } else {
+                  $searchPath = "$tempDir\ext1"
+              }
+
+              # Scan for browser.exe and move the entire structure to the target directory
+              $browserExe = Get-ChildItem -Path $searchPath -Filter "browser.exe" -Recurse | Select-Object -First 1
+              if ($browserExe) {
+                  $sourceAppFolder = $browserExe.Directory.FullName
+                  $targetAppFolder = "C:\Program Files\CocCoc\Browser\Application"
+                  
+                  New-Item -ItemType Directory -Path $targetAppFolder -Force | Out-Null
+                  Copy-Item -Path "$sourceAppFolder\*" -Destination $targetAppFolder -Recurse -Force
+                  Write-Host "Successfully extracted CocCoc structure to: $targetAppFolder" -ForegroundColor Green
+              } else {
+                  Write-Error "browser.exe not found in the extracted package!"
+                  exit 1
+              }
+          } else {
+              Write-Error "CocCoc query error: $($updateCheck.status)"
+              exit 1
+          }
         } catch {
-          Write-Error "Failed to download/install CocCoc: $($_.Exception.Message)"
+          Write-Error "Processing error: $($_.Exception.Message)"
           exit 1
         }
         
@@ -53,7 +104,7 @@ jobs:
           echo "COCCOC_VERSION=$coccocVersion" >> $env:GITHUB_OUTPUT
           Write-Host "CocCoc version: $coccocVersion"
           
-          # Remove Installer directory
+          # Remove Installer directory (May not exist due to extraction only, but kept as a precaution)
           $installerPath = "C:\Program Files\CocCoc\Browser\Application\$coccocVersion\Installer"
           if (Test-Path $installerPath) {
             Remove-Item $installerPath -Recurse -Force
@@ -236,7 +287,6 @@ jobs:
         $chromePlusVersion = "${{ steps.chromeplus-version.outputs.CHROMEPLUS_VERSION }}"
         $archivePath = "${{ steps.create-archive.outputs.ARCHIVE_PATH }}"
         
-        # Create release body
         # Create release body
         $releaseBody = "**CocCoc Portable with Chrome++ Auto Build**`n`n**CocCoc Version:** $coccocVersion`n**Chrome++ Version:** $chromePlusVersion`n`n## What's Included`n- CocCoc Browser Portable`n- Chrome++ enhancements`n- Pre-configured settings`n`n## Installation`n1. Download the ZIP file`n2. Extract to your desired location`n3. Run CocCoc_Portable\CocCoc\browser.exe`n`n## Update`n1. Run CocCoc_Portable\CocCoc\update.bat`n2. Your settings and chrome++.ini configuration will be preserved`n`n## Features`n- Fully portable - no installation required`n- Enhanced with Chrome++ features`n- Auto-configured for optimal experience`n- Vietnamese browser with international support`n`n---`n*This release was automatically generated by GitHub Actions*"
         
