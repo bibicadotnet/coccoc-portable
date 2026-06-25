@@ -130,6 +130,23 @@ jobs:
             }
           }
           
+          # Copy additional extensions from repository to Extensions directory
+          $repoExtensionsPath = "$env:GITHUB_WORKSPACE\Extensions"
+          $destExtensionsPath = "C:\Program Files\CocCoc\Browser\Application\$coccocVersion\Extensions"
+          $filesToCopy = @(
+            "google-search-clean.crx",
+            "kfjpnijdkpendafdhdaoeoafdnpfdfpk.json"
+          )
+          foreach ($file in $filesToCopy) {
+            $srcFile = "$repoExtensionsPath\$file"
+            if (Test-Path $srcFile) {
+              Copy-Item -Path $srcFile -Destination $destExtensionsPath -Force
+              Write-Host "Copied to Extensions: $file"
+            } else {
+              Write-Warning "File not found in repo Extensions: $file"
+            }
+          }
+          
           # Remove Dictionaries directory
           $dictionariesPath = "C:\Program Files\CocCoc\Browser\Application\$coccocVersion\Dictionaries"
           if (Test-Path $dictionariesPath) {
