@@ -61,6 +61,7 @@ Windows Registry Editor Version 5.00
 "RestrictCoreSharingOnRenderer"=dword:00000001
 "DomainReliabilityAllowed"=dword:00000000
 "ShowCastSessionsStartedByOtherDevices"=dword:00000000
+"SuppressUnsupportedOSWarning"=dword:00000001
 
 ; Tắt Access Code Cast
 "AccessCodeCastEnabled"=dword:00000000
