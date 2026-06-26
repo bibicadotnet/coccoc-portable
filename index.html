@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cốc Cốc Portable Debloat v2</title>
-    <link rel="icon" type="image/x-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAHYgAAB2IBOHqZ2wAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAScSURBVFiF7ZZbbFRVFIa/ffY5M53p0AvtMC1oCe20pa0GKdrEEDCBpFXwgZYWKCgpISAJie9eiUSNwScUjRIxSNRUoWCMCUHkgWpb5NIS7CUFRdtpS6cXept2Opdzjg/G0jIUmDbBmPC/nGTvtf71n3/tdfaBh/g/Iy+vzJGXV+aYDYc6m+Qhq6VBmKYE0h+4gNScshe1pLnpSXnZIY/i0Lh0MDQTHmVm5cuk5rB+GLtll6I/t8W6UPV7AfHABKTkGuvVZKfD6s5CiXWQUbHJmpa2OWEmXDNqgarKVwLdXuk/uA+BSU9ji10k6j/RzrJouSJsm/dYuUtVzWrDNF2KqowLRQm6N+Ue/r2yucK9YfHha5XNOw1/2Pnx2wuUsXEDgLhYyc5XO3QlRu27UxEjbMQIIbzGSGCF948TPXcXkL3+iHOpa/NTb62UQlOQVklMkp3x/jFikuz42oY4WXyMxtPZfP7NAAiT7RuSePzZqxRVlSDUyK6aIYOLe6r1ngbv1z2tVVsn70W0wES0OQvmyzmL4qes25x2AGSsht2hokqBM0kiACnBEaeiOSzEJNvuZALJBfOlt6Gn7fb1CAFCoAs5/YE2gmF03QSguOiWyHDQwAjp0+YJKRCCiICopsA04PLecwTGdPRJVIYB/jGd+r11YJrRUEYnoOtsG8N9AnvCHNo6ghPrHTdC2BLmMNwNXdWeqARENYZ9NV3IgtXI1st8VnmdVJdGWDfpu6ljWZSBmbmE3pqLzH8m7b45o3JADxuEGi/ha27iTN0owaCBoZucqR1lpKmJ4JUL6IHpz8GsBWguG6LvOmt/KMXQJGtXxbFmVTy6qrDm+xKUgXasqXeegulwXy3orffSW9+NI8VB4bESNIdG5o58Xt//G4oUZO3Mx+aKpeh4Me2n/qTl0BWSl7pw5rvuyX1PBxre/5ULe6rRx0J0n+viZHEVPs8IGRty6RxR8AxAemkOvo4RTq47jreuk/BokAt7qmnYd252DvRc6qb7lw4Kvy1Gtf0Teq2ymfr3aln5URHLD64BBEIK6t+tJWf7EtwbFwOQs+MJTm/8jp7V3cxbljIzBwZbb+Iuz5koDpBRnI2iSgZa+mg8cInGAxcZaOlDqArp6zJvvZlNxV2ey2DrzZk7kLU5N1KxVfLkm8s5VXqCvF35AFTv/pFnjxajWOWU2MzyyPyoBEwHn2eYhc+7J+we7RzG1zGCNSm6CYDbbkNnVukHilXdpdo0TXVYI4LDvnGefmcFqdN8aG6cbafutZ9RHTG4X1qFp+o8j64vwFN1Ht9f/YT94ZAZCH3Se/XYy//mTHFAClIs2Xla4satoEaaE+r0UPvGpyiiBmmzTNnT/UEMUxK/dTeWBWkMJs7FXlHIoD0We0UhtrExBioPa4GmK1Nmc0oVU/IVw/0lSmKiVGIi7VSd87At3k9oaBChTO23aeho8QkwKU/GxU88DYsFc6hfxzS/nJwXce8uWL7ti/Cw/wXFZjMVqyW6q20aGIGAMPzjQo2LPdJZc2jbXQUAPJJXNtcI49RNY0a/2rdDCkVTVHo7mo7efSYf4r/A32tCoGu61j1CAAAAAElFTkSuQmCC">
+    <link rel="icon" type="image/x-icon"
+        href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAHYgAAB2IBOHqZ2wAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAScSURBVFiF7ZZbbFRVFIa/ffY5M53p0AvtMC1oCe20pa0GKdrEEDCBpFXwgZYWKCgpISAJie9eiUSNwScUjRIxSNRUoWCMCUHkgWpb5NIS7CUFRdtpS6cXept2Opdzjg/G0jIUmDbBmPC/nGTvtf71n3/tdfaBh/g/Iy+vzJGXV+aYDYc6m+Qhq6VBmKYE0h+4gNScshe1pLnpSXnZIY/i0Lh0MDQTHmVm5cuk5rB+GLtll6I/t8W6UPV7AfHABKTkGuvVZKfD6s5CiXWQUbHJmpa2OWEmXDNqgarKVwLdXuk/uA+BSU9ji10k6j/RzrJouSJsm/dYuUtVzWrDNF2KqowLRQm6N+Ue/r2yucK9YfHha5XNOw1/2Pnx2wuUsXEDgLhYyc5XO3QlRu27UxEjbMQIIbzGSGCF948TPXcXkL3+iHOpa/NTb62UQlOQVklMkp3x/jFikuz42oY4WXyMxtPZfP7NAAiT7RuSePzZqxRVlSDUyK6aIYOLe6r1ngbv1z2tVVsn70W0wES0OQvmyzmL4qes25x2AGSsht2hokqBM0kiACnBEaeiOSzEJNvuZALJBfOlt6Gn7fb1CAFCoAs5/YE2gmF03QSguOiWyHDQwAjp0+YJKRCCiICopsA04PLecwTGdPRJVIYB/jGd+r11YJrRUEYnoOtsG8N9AnvCHNo6ghPrHTdC2BLmMNwNXdWeqARENYZ9NV3IgtXI1st8VnmdVJdGWDfpu6ljWZSBmbmE3pqLzH8m7b45o3JADxuEGi/ha27iTN0owaCBoZucqR1lpKmJ4JUL6IHpz8GsBWguG6LvOmt/KMXQJGtXxbFmVTy6qrDm+xKUgXasqXeegulwXy3orffSW9+NI8VB4bESNIdG5o58Xt//G4oUZO3Mx+aKpeh4Me2n/qTl0BWSl7pw5rvuyX1PBxre/5ULe6rRx0J0n+viZHEVPs8IGRty6RxR8AxAemkOvo4RTq47jreuk/BokAt7qmnYd252DvRc6qb7lw4Kvy1Gtf0Teq2ymfr3aln5URHLD64BBEIK6t+tJWf7EtwbFwOQs+MJTm/8jp7V3cxbljIzBwZbb+Iuz5koDpBRnI2iSgZa+mg8cInGAxcZaOlDqArp6zJvvZlNxV2ey2DrzZk7kLU5N1KxVfLkm8s5VXqCvF35AFTv/pFnjxajWOWU2MzyyPyoBEwHn2eYhc+7J+we7RzG1zGCNSm6CYDbbkNnVukHilXdpdo0TXVYI4LDvnGefmcFqdN8aG6cbafutZ9RHTG4X1qFp+o8j64vwFN1Ht9f/YT94ZAZCH3Se/XYy//mTHFAClIs2Xla4satoEaaE+r0UPvGpyiiBmmzTNnT/UEMUxK/dTeWBWkMJs7FXlHIoD0We0UhtrExBioPa4GmK1Nmc0oVU/IVw/0lSmKiVGIi7VSd87At3k9oaBChTO23aeho8QkwKU/GxU88DYsFc6hfxzS/nJwXce8uWL7ti/Cw/wXFZjMVqyW6q20aGIGAMPzjQo2LPdJZc2jbXQUAPJJXNtcI49RNY0a/2rdDCkVTVHo7mo7efSYf4r/A32tCoGu61j1CAAAAAElFTkSuQmCC">
     <style>
         * {
             margin: 0;
@@ -103,6 +105,16 @@
             text-decoration: underline;
         }
 
+        .version-group-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #ff6b35;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
         .version-list {
             list-style: none;
             border: 1px solid #ddd;
@@ -166,9 +178,17 @@
             margin-right: 6px;
         }
 
-        .status-current { background: #28a745; }
-        .status-outdated { background: #ffc107; }
-        .status-unavailable { background: #dc3545; }
+        .status-current {
+            background: #28a745;
+        }
+
+        .status-outdated {
+            background: #ffc107;
+        }
+
+        .status-unavailable {
+            background: #dc3545;
+        }
 
         .loading {
             text-align: center;
@@ -229,39 +249,40 @@
             text-decoration: underline;
         }
 
-/* Ẩn footer */
-.atk-list-footer {
-display: none !important;
-}
+        /* Ẩn footer */
+        .atk-list-footer {
+            display: none !important;
+        }
 
-/* Ẩn link website khi comment */
-input[name="link"].atk-link {
-    display: none;
-}
+        /* Ẩn link website khi comment */
+        input[name="link"].atk-link {
+            display: none;
+        }
 
-/* Bo tròn avatar */
-.atk-comment>.atk-avatar img {
-border-radius: 50% !important;
-}
-/* Tắt hiệu ứng a href khi user điền website, hạn chế spam link rác  */
-.atk-avatar a {
-	 pointer-events: none !important;
- cursor: default !important;
-}		
+        /* Bo tròn avatar */
+        .atk-comment>.atk-avatar img {
+            border-radius: 50% !important;
+        }
+
+        /* Tắt hiệu ứng a href khi user điền website, hạn chế spam link rác  */
+        .atk-avatar a {
+            pointer-events: none !important;
+            cursor: default !important;
+        }
 
         @media (max-width: 600px) {
             body {
                 padding: 10px;
             }
-            
+
             .header {
                 padding: 20px;
             }
-            
+
             .header h1 {
                 font-size: 1.5rem;
             }
-            
+
             .content {
                 padding: 20px;
             }
@@ -276,10 +297,11 @@ border-radius: 50% !important;
                 flex-direction: column;
                 align-items: flex-start;
                 gap: 5px;
-            }  
+            }
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <header class="header">
@@ -304,9 +326,12 @@ border-radius: 50% !important;
                 <h2>⭐ Tính năng</h2>
                 <div class="features">
                     <ul>
-                        <li>Phiên bản Cốc Cốc Stable x64 Portable đã được tối ưu, tất cả dữ liệu được lưu trữ cục bộ</li>
-                        <li>Gỡ bỏ phần lớn quảng cáo, tính năng không cần thiết của Cốc Cốc, giúp giao diện sạch sẽ hơn</li>
-                        <li>Tối ưu hiệu năng, tăng thêm một chút quyền riêng tư, dễ dàng tùy chỉnh theo nhu cầu cá nhân</li>
+                        <li>Phiên bản Cốc Cốc Stable x64 Portable đã được tối ưu, tất cả dữ liệu được lưu trữ cục bộ
+                        </li>
+                        <li>Gỡ bỏ phần lớn quảng cáo, tính năng không cần thiết của Cốc Cốc, giúp giao diện sạch sẽ hơn
+                        </li>
+                        <li>Tối ưu hiệu năng, tăng thêm một chút quyền riêng tư, dễ dàng tùy chỉnh theo nhu cầu cá nhân
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -315,7 +340,9 @@ border-radius: 50% !important;
                 <h2>📁 Các file và công dụng</h2>
                 <div class="features">
                     <ul>
-                        <li><strong>chrome++.ini</strong>: File cấu hình cho <a href="https://github.com/bibicadotnet/chrome-next-mini" target="_blank">Chrome Next Mini</a></li>
+                        <li><strong>chrome++.ini</strong>: File cấu hình cho <a
+                                href="https://github.com/bibicadotnet/chrome-next-mini" target="_blank">Chrome Next
+                                Mini</a></li>
                         <li><strong>debloater.reg</strong>: Loại bỏ các tính năng không cần thiết của Cốc Cốc</li>
                         <li><strong>default-apps-multi-profile.bat</strong>: Đặt Cốc Cốc làm trình duyệt mặc định</li>
                         <li><strong>update.bat</strong>: Cập nhật lên phiên bản mới nhất</li>
@@ -326,32 +353,34 @@ border-radius: 50% !important;
             <div class="section">
                 <h2>⚠️ Cảnh báo</h2>
                 <div class="features">
-                    <ul>                     
-                        <li>Các video, auto chạy qua DRM sẽ gặp lỗi, chưa có hướng xử lý, vì đã bypass Secure Preferences</li>
+                    <ul>
+                        <li>Các video, auto chạy qua DRM sẽ gặp lỗi, chưa có hướng xử lý, vì đã bypass Secure
+                            Preferences</li>
                     </ul>
                 </div>
             </div>
 
 
-<link href="https://comment.bibica.net/dist/Artalk.css" rel="stylesheet">
-<script src="https://comment.bibica.net/dist/Artalk.js"></script>
+            <link href="https://comment.bibica.net/dist/Artalk.css" rel="stylesheet">
+            <script src="https://comment.bibica.net/dist/Artalk.js"></script>
             <div class="section">
                 <h2>📝 Bình luận</h2>
                 <div id="Comments"></div>
             </div>
 
-<script>
-  Artalk.init({
-    el:        '#Comments',
-    pageKey:   'https://coccoc.bibica.net/', 
-    pageTitle: '',
-    server:    'https://comment.bibica.net',
-    site:      'Cốc Cốc',
-  })
-</script>           
+            <script>
+                Artalk.init({
+                    el: '#Comments',
+                    pageKey: 'https://coccoc.bibica.net/',
+                    pageTitle: '',
+                    server: 'https://comment.bibica.net',
+                    site: 'Cốc Cốc',
+                })
+            </script>
 
             <p style="text-align: center; margin-top: 10px; font-size: 0.9rem;">
-                <a href="https://github.com/bibicadotnet/coccoc-portable" target="_blank" style="color: #ff6b35; text-decoration: none; font-size: 1.1em; display: inline-flex; align-items: center; gap: 8px; transition: color 0.2s ease;">
+                <a href="https://github.com/bibicadotnet/coccoc-portable" target="_blank"
+                    style="color: #ff6b35; text-decoration: none; font-size: 1.1em; display: inline-flex; align-items: center; gap: 8px; transition: color 0.2s ease;">
                     <svg height="20" width="20" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
                         <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 
                                  2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 
@@ -374,137 +403,144 @@ border-radius: 50% !important;
         </div>
     </div>
 
-<script>
-    // Hiển thị thông tin Chromium version
-    navigator.userAgentData.getHighEntropyValues(["fullVersionList"]).then(function(data) {
-        if (data.fullVersionList.length !== 0) {
-            var brandsList = data.fullVersionList;
-            var chromiumVersion = null;
-            var browserName = null;
-            var browserVersion = null;
+    <script>
+        // Hiển thị thông tin Chromium version
+        navigator.userAgentData.getHighEntropyValues(["fullVersionList"]).then(function (data) {
+            if (data.fullVersionList.length !== 0) {
+                var brandsList = data.fullVersionList;
+                var chromiumVersion = null;
+                var browserName = null;
+                var browserVersion = null;
 
-            // Lấy Chromium version
-            for (var i = 0; i < brandsList.length; i++) {
-                if (brandsList[i].brand === "Chromium") {
-                    chromiumVersion = brandsList[i].version;
-                    break;
+                // Lấy Chromium version
+                for (var i = 0; i < brandsList.length; i++) {
+                    if (brandsList[i].brand === "Chromium") {
+                        chromiumVersion = brandsList[i].version;
+                        break;
+                    }
                 }
-            }
 
-            for (var i = 0; i < brandsList.length; i++) {
-                if (brandsList[i].brand === "Microsoft Edge") {
-                    browserName = "Microsoft Edge";
-                    browserVersion = brandsList[i].version;
-                    break;
+                for (var i = 0; i < brandsList.length; i++) {
+                    if (brandsList[i].brand === "Microsoft Edge") {
+                        browserName = "Microsoft Edge";
+                        browserVersion = brandsList[i].version;
+                        break;
+                    }
                 }
-            }
 
-            var displayText = "";
-            if (browserName === "Microsoft Edge") {
-                displayText = browserName + "\t" + browserVersion + "<br>" +
-                              "Chromium version\t" + chromiumVersion;
-            } else {
-                displayText = "Chromium version\t" + chromiumVersion;
-            }
-
-            document.getElementById("uaChromiumVersion").innerHTML = displayText;
-        }
-    });
-
-    // Lấy thông tin releases từ GitHub API
-    async function fetchReleases() {
-        try {
-            let allReleases = [];
-            let page = 1;
-            const perPage = 100; // GitHub API cho phép tối đa 100 items per page
-            
-            // Lấy tất cả releases thay vì chỉ 30 releases đầu
-            while (true) {
-                const response = await fetch(`https://api.github.com/repos/bibicadotnet/coccoc-portable/releases?page=${page}&per_page=${perPage}`);
-                const releases = await response.json();
-                
-                if (!Array.isArray(releases) || releases.length === 0) {
-                    break;
+                var displayText = "";
+                if (browserName === "Microsoft Edge") {
+                    displayText = browserName + "\t" + browserVersion + "<br>" +
+                        "Chromium version\t" + chromiumVersion;
+                } else {
+                    displayText = "Chromium version\t" + chromiumVersion;
                 }
-                
-                allReleases = allReleases.concat(releases);
-                
-                // Nếu số lượng releases trong page này ít hơn perPage, 
-                // có nghĩa là đã lấy hết
-                if (releases.length < perPage) {
-                    break;
-                }
-                
-                page++;
-            }
 
-            // Lọc và sắp xếp releases
-            const processedReleases = processReleases(allReleases);
-            displayReleases(processedReleases);
-            
-        } catch (error) {
-            console.error('Error fetching releases:', error);
-            document.getElementById('versions-content').innerHTML = 
-                '<div class="error">Không thể tải danh sách phiên bản. Vui lòng thử lại sau.</div>';
-        }
-    }
-
-    function processReleases(releases) {
-        // Lọc các releases có tag_name phù hợp với pattern
-        const validReleases = releases.filter(release => {
-            return release.tag_name && release.tag_name.match(/^coccoc-portable-x64_(\d+\.\d+\.\d+\.\d+)_/);
-        });
-
-        // Tạo map để nhóm theo major version
-        const versionMap = new Map();
-        
-        validReleases.forEach(release => {
-            const match = release.tag_name.match(/^coccoc-portable-x64_(\d+)\.(\d+)\.(\d+)\.(\d+)_/);
-            if (match) {
-                const majorVersion = parseInt(match[1]);
-                const fullVersion = `${match[1]}.${match[2]}.${match[3]}.${match[4]}`;
-                
-                if (!versionMap.has(majorVersion) || 
-                    new Date(release.published_at) > new Date(versionMap.get(majorVersion).published_at)) {
-                    versionMap.set(majorVersion, {
-                        ...release,
-                        majorVersion: majorVersion,
-                        fullVersion: fullVersion
-                    });
-                }
+                document.getElementById("uaChromiumVersion").innerHTML = displayText;
             }
         });
 
-        // Sắp xếp theo major version giảm dần và lấy tối đa 5 phiên bản
-        return Array.from(versionMap.values())
-            .sort((a, b) => b.majorVersion - a.majorVersion)
-            .slice(0, 5);
-    }
+        // Lấy thông tin releases từ GitHub API
+        async function fetchReleases() {
+            try {
+                let allReleases = [];
+                let page = 1;
+                const perPage = 100; // GitHub API cho phép tối đa 100 items per page
 
-    function formatDate(dateString) {
-        const date = new Date(dateString);
-        const day = date.getDate().toString().padStart(2, '0');
-        const month = (date.getMonth() + 1).toString().padStart(2, '0');
-        const year = date.getFullYear();
-        return `${day}/${month}/${year}`;
-    }
+                // Lấy tất cả releases thay vì chỉ 30 releases đầu
+                while (true) {
+                    const response = await fetch(`https://api.github.com/repos/bibicadotnet/coccoc-portable/releases?page=${page}&per_page=${perPage}`);
+                    const releases = await response.json();
 
-    function displayReleases(releases) {
-        if (releases.length === 0) {
-            document.getElementById('versions-content').innerHTML = 
-                '<div class="error">Không tìm thấy phiên bản nào.</div>';
-            return;
+                    if (!Array.isArray(releases) || releases.length === 0) {
+                        break;
+                    }
+
+                    allReleases = allReleases.concat(releases);
+
+                    // Nếu số lượng releases trong page này ít hơn perPage, 
+                    // có nghĩa là đã lấy hết
+                    if (releases.length < perPage) {
+                        break;
+                    }
+
+                    page++;
+                }
+
+                // Lọc và sắp xếp releases
+                const processedReleases = processReleases(allReleases);
+                displayReleases(processedReleases);
+
+            } catch (error) {
+                console.error('Error fetching releases:', error);
+                document.getElementById('versions-content').innerHTML =
+                    '<div class="error">Không thể tải danh sách phiên bản. Vui lòng thử lại sau.</div>';
+            }
         }
 
-        let html = '<ul class="version-list">';
-        
-        releases.forEach((release, index) => {
-            const downloadUrl = `https://github.com/bibicadotnet/coccoc-portable/releases/download/${release.tag_name}/${release.tag_name}.zip`;
-            const isLatest = index === 0;
-            const statusClass = isLatest ? 'status-current' : 'status-outdated';
-            const releaseDate = formatDate(release.published_at);
-            
-            html += `
+        function processReleases(releases) {
+            // Lọc các releases có tag_name phù hợp với pattern
+            const validReleases = releases.filter(release => {
+                return release.tag_name && release.tag_name.match(/^coccoc-portable-x64_(\d+\.\d+\.\d+\.\d+)_/);
+            });
+
+            // Tạo map để nhóm theo major version
+            const versionMap = new Map();
+
+            validReleases.forEach(release => {
+                const match = release.tag_name.match(/^coccoc-portable-x64_(\d+)\.(\d+)\.(\d+)\.(\d+)_/);
+                if (match) {
+                    const majorVersion = parseInt(match[1]);
+                    const fullVersion = `${match[1]}.${match[2]}.${match[3]}.${match[4]}`;
+
+                    // Loại bỏ nhánh 109
+                    if (majorVersion === 109) {
+                        return;
+                    }
+
+                    if (!versionMap.has(majorVersion) ||
+                        new Date(release.published_at) > new Date(versionMap.get(majorVersion).published_at)) {
+                        versionMap.set(majorVersion, {
+                            ...release,
+                            majorVersion: majorVersion,
+                            fullVersion: fullVersion
+                        });
+                    }
+                }
+            });
+
+            // Sắp xếp theo major version giảm dần và lấy tối đa 5 phiên bản
+            return Array.from(versionMap.values())
+                .sort((a, b) => b.majorVersion - a.majorVersion)
+                .slice(0, 5);
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            const day = date.getDate().toString().padStart(2, '0');
+            const month = (date.getMonth() + 1).toString().padStart(2, '0');
+            const year = date.getFullYear();
+            return `${day}/${month}/${year}`;
+        }
+
+        function displayReleases(releases) {
+            if (releases.length === 0) {
+                document.getElementById('versions-content').innerHTML =
+                    '<div class="error">Không tìm thấy phiên bản nào.</div>';
+                return;
+            }
+
+            // Section: Windows 10/11
+            let html = '<div class="version-group-title"><svg width="18" height="18" viewBox="0 0 24 24" fill="#0078d7" style="flex-shrink: 0;"><path d="M0 3.449L9.75 2.1v9.45H0V3.449zM0 12.45h9.75v9.45L0 20.551v-8.1zM11.25 1.89L24 0v11.55H11.25V1.89zM11.25 12.45H24v11.55l-12.75-1.89v-9.66z"/></svg> Hỗ trợ Windows 10/11</div>';
+            html += '<ul class="version-list">';
+
+            releases.forEach((release, index) => {
+                const downloadUrl = `https://github.com/bibicadotnet/coccoc-portable/releases/download/${release.tag_name}/${release.tag_name}.zip`;
+                const isLatest = index === 0;
+                const statusClass = isLatest ? 'status-current' : 'status-outdated';
+                const releaseDate = formatDate(release.published_at);
+
+                html += `
                 <li class="version-item">
                     <div class="version-info">
                         <h3>Cốc Cốc Portable ${release.majorVersion}.x</h3>
@@ -516,17 +552,35 @@ border-radius: 50% !important;
                     <a href="${downloadUrl}" class="version-number" target="_blank">${release.fullVersion}</a>
                 </li>
             `;
-        });
-        
-        html += '</ul>';
-        document.getElementById('versions-content').innerHTML = html;
-    }
+            });
+            html += '</ul>';
 
-    // Tải dữ liệu khi trang được load
-    document.addEventListener('DOMContentLoaded', function() {
-        fetchReleases();
-    });
-</script>
+            // Section: Windows 7/8
+            html += '<div class="version-group-title" style="margin-top: 25px;"><svg width="18" height="18" viewBox="0 0 24 24" style="flex-shrink: 0;"><path d="M2 3.5C5 3.5 6.5 5 9.5 5V13C6.5 13 5 11.5 2 11.5Z" fill="#f25022"/><path d="M10.5 5C13.5 5 15 3.5 18 3.5V11.5C15 11.5 13.5 13 10.5 13Z" fill="#7fba00"/><path d="M2 12.5C5 12.5 6.5 14 9.5 14V22C6.5 22 5 20.5 2 20.5Z" fill="#00a4ef"/><path d="M10.5 14C13.5 14 15 12.5 18 12.5V20.5C15 20.5 13.5 22 10.5 22Z" fill="#ffb900"/></svg> Hỗ trợ Windows 7/8 (Legacy)</div>';
+            html += '<ul class="version-list">';
+            html += `
+            <li class="version-item">
+                <div class="version-info">
+                    <h3>Cốc Cốc Portable 109.x</h3>
+                    <div class="version-status">
+                        <span class="status-dot status-outdated"></span>
+                        Phiên bản cuối cùng hỗ trợ Windows 7/8
+                    </div>
+                </div>
+                <a href="https://github.com/bibicadotnet/coccoc-portable/releases/download/coccoc-portable-x64_109.0.5414.132_v1.0.3/coccoc-portable-x64_109.0.5414.132_v1.0.3.zip" class="version-number" target="_blank">109.0.5414.132</a>
+            </li>
+        `;
+            html += '</ul>';
+
+            document.getElementById('versions-content').innerHTML = html;
+        }
+
+        // Tải dữ liệu khi trang được load
+        document.addEventListener('DOMContentLoaded', function () {
+            fetchReleases();
+        });
+    </script>
 
 </body>
+
 </html>
