@@ -1,4 +1,5 @@
 @echo off
+chcp 65001 >nul
 
 :: ==============================================
 :: CONFIGURATION SECTION - EDIT THESE VALUES
@@ -6,8 +7,9 @@
 set "app=%~dp0"
 set "CHROMIUM_PATH=%app%browser.exe"
 set "PROFILE_PATH=%app%..\Data"
-set "BROWSER_NAME=CocCoc Portable"
-set "BROWSER_DESC=CocCoc Portable default browser with custom profile"
+set "BROWSER_NAME=Cốc Cốc Portable"
+set "BROWSER_ID=CocCocPortable"
+set "BROWSER_DESC=Cốc Cốc Portable default browser with custom profile"
 
 :: ==============================================
 :: SYSTEM CHECKS
@@ -42,43 +44,58 @@ if not exist "%PROFILE_PATH%" (
 echo Configuring registry settings...
 
 :: Clean up any existing settings first
-reg delete "HKLM\Software\Clients\StartMenuInternet\%BROWSER_NAME%" /f >nul 2>&1
-reg delete "HKLM\Software\Classes\%BROWSER_NAME%HTML" /f >nul 2>&1
-reg delete "HKLM\Software\Classes\%BROWSER_NAME%URL" /f >nul 2>&1
+reg delete "HKLM\Software\Clients\StartMenuInternet\%BROWSER_ID%" /f >nul 2>&1
+reg delete "HKLM\Software\Classes\%BROWSER_ID%HTML" /f >nul 2>&1
+reg delete "HKLM\Software\Classes\%BROWSER_ID%URL" /f >nul 2>&1
+:: Clean up RegisteredApplications to remove any old name or ID remnants
+reg delete "HKLM\Software\RegisteredApplications" /v "%BROWSER_NAME%" /f >nul 2>&1
+reg delete "HKLM\Software\RegisteredApplications" /v "%BROWSER_ID%" /f >nul 2>&1
 
 :: Register browser capabilities
-reg add "HKLM\Software\Clients\StartMenuInternet\%BROWSER_NAME%" /ve /d "%BROWSER_NAME%" /f
-reg add "HKLM\Software\Clients\StartMenuInternet\%BROWSER_NAME%\DefaultIcon" /ve /d "\"%CHROMIUM_PATH%\"" /f
-reg add "HKLM\Software\Clients\StartMenuInternet\%BROWSER_NAME%\shell\open\command" /ve /d "\"%CHROMIUM_PATH%\" --user-data-dir=\"%PROFILE_PATH%\" \"%%1\"" /f
+reg add "HKLM\Software\Clients\StartMenuInternet\%BROWSER_ID%" /ve /d "%BROWSER_NAME%" /f
+reg add "HKLM\Software\Clients\StartMenuInternet\%BROWSER_ID%\DefaultIcon" /ve /d "\"%CHROMIUM_PATH%\"" /f
+reg add "HKLM\Software\Clients\StartMenuInternet\%BROWSER_ID%\shell\open\command" /ve /d "\"%CHROMIUM_PATH%\" --user-data-dir=\"%PROFILE_PATH%\" \"%%1\"" /f
 
 :: Register file associations
-reg add "HKLM\Software\Classes\%BROWSER_NAME%HTML" /ve /d "%BROWSER_NAME% Document" /f
-reg add "HKLM\Software\Classes\%BROWSER_NAME%HTML\DefaultIcon" /ve /d "\"%CHROMIUM_PATH%\"" /f
-reg add "HKLM\Software\Classes\%BROWSER_NAME%HTML\shell\open\command" /ve /d "\"%CHROMIUM_PATH%\" --user-data-dir=\"%PROFILE_PATH%\" \"%%1\"" /f
+reg add "HKLM\Software\Classes\%BROWSER_ID%HTML" /ve /d "%BROWSER_NAME% Document" /f
+reg add "HKLM\Software\Classes\%BROWSER_ID%HTML\DefaultIcon" /ve /d "\"%CHROMIUM_PATH%\"" /f
+reg add "HKLM\Software\Classes\%BROWSER_ID%HTML\shell\open\command" /ve /d "\"%CHROMIUM_PATH%\" --user-data-dir=\"%PROFILE_PATH%\" \"%%1\"" /f
+
+:: Declare UI properties for File Associations (Required to display name in Windows Settings)
+reg add "HKLM\Software\Classes\%BROWSER_ID%HTML\Application" /v "ApplicationName" /d "%BROWSER_NAME%" /f
+reg add "HKLM\Software\Classes\%BROWSER_ID%HTML\Application" /v "ApplicationIcon" /d "\"%CHROMIUM_PATH%\",0" /f
+reg add "HKLM\Software\Classes\%BROWSER_ID%HTML\Application" /v "ApplicationDescription" /d "%BROWSER_DESC%" /f
 
 :: Register URL protocols
-reg add "HKLM\Software\Classes\%BROWSER_NAME%URL" /ve /d "%BROWSER_NAME% URL" /f
-reg add "HKLM\Software\Classes\%BROWSER_NAME%URL" /v "URL Protocol" /d "" /f
-reg add "HKLM\Software\Classes\%BROWSER_NAME%URL\DefaultIcon" /ve /d "\"%CHROMIUM_PATH%\"" /f
-reg add "HKLM\Software\Classes\%BROWSER_NAME%URL\shell\open\command" /ve /d "\"%CHROMIUM_PATH%\" --user-data-dir=\"%PROFILE_PATH%\" \"%%1\"" /f
+reg add "HKLM\Software\Classes\%BROWSER_ID%URL" /ve /d "%BROWSER_NAME% URL" /f
+reg add "HKLM\Software\Classes\%BROWSER_ID%URL" /v "URL Protocol" /d "" /f
+reg add "HKLM\Software\Classes\%BROWSER_ID%URL\DefaultIcon" /ve /d "\"%CHROMIUM_PATH%\"" /f
+reg add "HKLM\Software\Classes\%BROWSER_ID%URL\shell\open\command" /ve /d "\"%CHROMIUM_PATH%\" --user-data-dir=\"%PROFILE_PATH%\" \"%%1\"" /f
+
+:: Declare UI properties for URL Protocols (Required to display name in Windows Settings)
+reg add "HKLM\Software\Classes\%BROWSER_ID%URL\Application" /v "ApplicationName" /d "%BROWSER_NAME%" /f
+reg add "HKLM\Software\Classes\%BROWSER_ID%URL\Application" /v "ApplicationIcon" /d "\"%CHROMIUM_PATH%\",0" /f
+reg add "HKLM\Software\Classes\%BROWSER_ID%URL\Application" /v "ApplicationDescription" /d "%BROWSER_DESC%" /f
 
 :: Set capabilities
-reg add "HKLM\Software\Clients\StartMenuInternet\%BROWSER_NAME%\Capabilities" /v "ApplicationName" /d "%BROWSER_NAME%" /f
-reg add "HKLM\Software\Clients\StartMenuInternet\%BROWSER_NAME%\Capabilities" /v "ApplicationDescription" /d "%BROWSER_DESC%" /f
+reg add "HKLM\Software\Clients\StartMenuInternet\%BROWSER_ID%\Capabilities" /v "ApplicationName" /d "%BROWSER_NAME%" /f
+reg add "HKLM\Software\Clients\StartMenuInternet\%BROWSER_ID%\Capabilities" /v "ApplicationDescription" /d "%BROWSER_DESC%" /f
+:: Declare Application Icon for Capabilities
+reg add "HKLM\Software\Clients\StartMenuInternet\%BROWSER_ID%\Capabilities" /v "ApplicationIcon" /d "\"%CHROMIUM_PATH%\",0" /f
 
 :: File associations
-reg add "HKLM\Software\Clients\StartMenuInternet\%BROWSER_NAME%\Capabilities\FileAssociations" /v ".htm" /d "%BROWSER_NAME%HTML" /f
-reg add "HKLM\Software\Clients\StartMenuInternet\%BROWSER_NAME%\Capabilities\FileAssociations" /v ".html" /d "%BROWSER_NAME%HTML" /f
-reg add "HKLM\Software\Clients\StartMenuInternet\%BROWSER_NAME%\Capabilities\FileAssociations" /v ".pdf" /d "%BROWSER_NAME%HTML" /f
-reg add "HKLM\Software\Clients\StartMenuInternet\%BROWSER_NAME%\Capabilities\FileAssociations" /v ".svg" /d "%BROWSER_NAME%HTML" /f
+reg add "HKLM\Software\Clients\StartMenuInternet\%BROWSER_ID%\Capabilities\FileAssociations" /v ".htm" /d "%BROWSER_ID%HTML" /f
+reg add "HKLM\Software\Clients\StartMenuInternet\%BROWSER_ID%\Capabilities\FileAssociations" /v ".html" /d "%BROWSER_ID%HTML" /f
+reg add "HKLM\Software\Clients\StartMenuInternet\%BROWSER_ID%\Capabilities\FileAssociations" /v ".pdf" /d "%BROWSER_ID%HTML" /f
+reg add "HKLM\Software\Clients\StartMenuInternet\%BROWSER_ID%\Capabilities\FileAssociations" /v ".svg" /d "%BROWSER_ID%HTML" /f
 
 :: URL associations
-reg add "HKLM\Software\Clients\StartMenuInternet\%BROWSER_NAME%\Capabilities\URLAssociations" /v "http" /d "%BROWSER_NAME%URL" /f
-reg add "HKLM\Software\Clients\StartMenuInternet\%BROWSER_NAME%\Capabilities\URLAssociations" /v "https" /d "%BROWSER_NAME%URL" /f
-reg add "HKLM\Software\Clients\StartMenuInternet\%BROWSER_NAME%\Capabilities\URLAssociations" /v "ftp" /d "%BROWSER_NAME%URL" /f
+reg add "HKLM\Software\Clients\StartMenuInternet\%BROWSER_ID%\Capabilities\URLAssociations" /v "http" /d "%BROWSER_ID%URL" /f
+reg add "HKLM\Software\Clients\StartMenuInternet\%BROWSER_ID%\Capabilities\URLAssociations" /v "https" /d "%BROWSER_ID%URL" /f
+reg add "HKLM\Software\Clients\StartMenuInternet\%BROWSER_ID%\Capabilities\URLAssociations" /v "ftp" /d "%BROWSER_ID%URL" /f
 
 :: Register with Windows
-reg add "HKLM\Software\RegisteredApplications" /v "%BROWSER_NAME%" /d "Software\Clients\StartMenuInternet\%BROWSER_NAME%\Capabilities" /f
+reg add "HKLM\Software\RegisteredApplications" /v "%BROWSER_NAME%" /d "Software\Clients\StartMenuInternet\%BROWSER_ID%\Capabilities" /f
 
 :: ==============================================
 :: ALTERNATE APPROACH FOR DEFAULT BROWSER
@@ -102,14 +119,14 @@ echo.
 
 :: Try alternative method using assoc command (may work in some cases)
 echo Attempting alternative method...
-assoc .html=%BROWSER_NAME%HTML >nul 2>&1
-assoc .htm=%BROWSER_NAME%HTML >nul 2>&1
-ftype %BROWSER_NAME%HTML="%CHROMIUM_PATH%" --user-data-dir="%PROFILE_PATH%" "%%1" >nul 2>&1
+assoc .html=%BROWSER_ID%HTML >nul 2>&1
+assoc .htm=%BROWSER_ID%HTML >nul 2>&1
+ftype %BROWSER_ID%HTML="%CHROMIUM_PATH%" --user-data-dir="%PROFILE_PATH%" "%%1" >nul 2>&1
 
 :: Remove the problematic lines that cause "Access denied"
 :: These lines are commented out because they don't work on Windows 10/11:
-:: reg add "HKCU\Software\Microsoft\Windows\Shell\Associations\UrlAssociations\http\UserChoice" /v "ProgId" /d "%BROWSER_NAME%URL" /f
-:: reg add "HKCU\Software\Microsoft\Windows\Shell\Associations\UrlAssociations\https\UserChoice" /v "ProgId" /d "%BROWSER_NAME%URL" /f
+:: reg add "HKCU\Software\Microsoft\Windows\Shell\Associations\UrlAssociations\http\UserChoice" /v "ProgId" /d "%BROWSER_ID%URL" /f
+:: reg add "HKCU\Software\Microsoft\Windows\Shell\Associations\UrlAssociations\https\UserChoice" /v "ProgId" /d "%BROWSER_ID%URL" /f
 
 :: Open default apps settings for manual configuration
 start "" "ms-settings:defaultapps"
