@@ -13,7 +13,6 @@ Windows Registry Editor Version 5.00
 "HelpMeWriteSettings"=dword:00000002
 "AIModeSettings"=dword:00000001
 "CreateThemesSettings"=dword:00000002
-"HistorySearchSettings"=dword:00000002
 "TabCompareSettings"=dword:00000002
 "DevToolsGenAiSettings"=dword:00000002
 "GoogleSearchSidePanelEnabled"=dword:00000000
@@ -46,7 +45,6 @@ Windows Registry Editor Version 5.00
 "RemoteAccessHostAllowClientPairing"=dword:00000000
 "DisableSafeBrowsingProceedAnyway"=dword:00000001
 "AdvancedProtectionAllowed"=dword:00000000
-"SavingBrowserHistoryDisabled"=dword:00000001
 "SafeSitesFilterBehavior"=dword:00000000
 "IntensiveWakeUpThrottlingEnabled"=dword:00000000
 "NTPMiddleSlotAnnouncementVisible"=dword:00000000
@@ -201,3 +199,7 @@ Windows Registry Editor Version 5.00
 
 [HKEY_CURRENT_USER\SOFTWARE\Policies\CocCoc_Portable\ExtensionInstallForcelist]
 "1"="jaadjnlkjnhohljficgoddcjmndjfdmi"  ; Blank New Tab Page
+
+; KHÔNG DÙNG (ghi chú)
+; "SavingBrowserHistoryDisabled"=dword:00000001
+; "HistorySearchSettings"=dword:00000002
