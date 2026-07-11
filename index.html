@@ -270,6 +270,231 @@
             cursor: default !important;
         }
 
+        /* Tăng font và điều chỉnh cách xuống dòng ở textarea gõ comment */
+        .atk-main-editor>.atk-textarea-wrap>.atk-textarea {
+            font-size: 17px !important;
+            word-wrap: break-word !important;
+        }
+
+        /* Tạo viền cho nick name gõ vào */
+        .atk-main-editor>.atk-header input[type=text] {
+            border: 1px solid #ECEFF2 !important;
+            -moz-border-radius: 3px;
+            -webkit-border-radius: 3px;
+            border-radius: 3px;
+        }
+
+        /* Tạo viền cho email gõ vào */
+        .atk-main-editor>.atk-header input[type=email] {
+            border: 1px solid #ECEFF2;
+            -moz-border-radius: 3px;
+            -webkit-border-radius: 3px;
+            border-radius: 3px;
+        }
+
+        /* CSS gốc lọc từ Artalk.css phục vụ hiển thị nội dung bình luận (có bù đắp margin/padding bị mất do reset *) */
+        .artalk p, .atk-layer-wrap p {
+            margin: 12px 0 !important;
+            word-break: break-word !important;
+        }
+        .artalk p:first-child, .atk-layer-wrap p:first-child {
+            margin-top: 0 !important;
+        }
+        .artalk p:last-child, .atk-layer-wrap p:last-child {
+            margin-bottom: 0 !important;
+        }
+
+        .artalk code, .atk-layer-wrap code {
+            font-family: source code pro, Consolas, Monaco, Menlo, sans-serif !important;
+            margin: 0 .05em !important;
+            padding: 0 .4em !important;
+            display: inline-block !important;
+            vertical-align: middle !important;
+            font-size: .9em !important;
+            background-color: var(--at-color-bg-grey) !important;
+            color: var(--at-color-font) !important;
+            border-radius: 2px !important;
+            word-break: break-word !important;
+        }
+
+        .artalk pre, .atk-layer-wrap pre {
+            margin: 10px 0 0 !important;
+            padding: 0 !important;
+            line-height: 0 !important;
+        }
+
+        .artalk pre code, .atk-layer-wrap pre code {
+            line-height: 1.6em !important;
+            display: block !important;
+            padding: 10px 15px !important;
+            white-space: pre-wrap !important;
+            background-color: var(--at-color-bg-grey) !important;
+            color: var(--at-color-font) !important;
+            margin: 0 !important;
+        }
+
+        .artalk pre code *, .atk-layer-wrap pre code * {
+            font-family: source code pro, Consolas, Monaco, Menlo, sans-serif !important;
+        }
+
+        .artalk blockquote, .atk-layer-wrap blockquote {
+            position: static !important;
+            margin: 10px 0 !important;
+            padding: 10px 20px !important;
+            background: var(--at-color-bg-grey) !important;
+            border-left: 4px solid #687a86 !important;
+            color: var(--at-color-font) !important;
+        }
+
+        .artalk ul, .atk-layer-wrap ul {
+            list-style: disc !important;
+            padding-left: 24px !important;
+            margin: 12px 0 !important;
+        }
+
+        .artalk ol, .atk-layer-wrap ol {
+            list-style: decimal !important;
+            padding-left: 24px !important;
+            margin: 12px 0 !important;
+        }
+
+        .artalk li+li, .atk-layer-wrap li+li {
+            margin-top: 8px !important;
+        }
+
+        .artalk li>ol, .artalk li>ul, .atk-layer-wrap li>ol, .atk-layer-wrap li>ul {
+            margin: 8px 0 0 !important;
+        }
+
+        .artalk h1, .artalk h2, .artalk h3, .artalk h4, .artalk h5, .artalk h6 {
+            margin: 16px 0 8px 0 !important;
+            font-weight: 600 !important;
+            line-height: 1.4 !important;
+        }
+
+        /* Điều chỉnh ảnh comment ở center */
+        .atk-content img {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 15px !important;
+        }
+
+        /* Điều chỉnh button Send comment */
+        .atk-main-editor>.atk-bottom .atk-send-btn {
+            background: #575760 !important;
+            font-size: 17px !important;
+            height: 30px !important;
+            width: 5em !important;
+            margin: auto !important;
+            padding: 0px !important;
+        }
+
+        /* Điều chỉnh màu sắc, cỡ chữ cho nick comment (Deep 1)  */
+        .atk-comment>.atk-main>.atk-header .atk-item.atk-nick,
+        .atk-comment>.atk-main>.atk-header .atk-item.atk-nick a {
+            font-size: 17px !important;
+            color: #28334a !important;
+            font-style: normal;
+            font-weight: 700;
+        }
+
+        /* Điều chỉnh màu sắc, cỡ chữ cho nick reply comment */
+        .atk-comment>.atk-main>.atk-header .atk-item.atk-reply-at>.atk-nick {
+            color: #28334a !important;
+            font-weight: 600;
+        }
+
+        /* Điều chỉnh màu sắc, cỡ chữ khung Comment policy */
+        p.comment-policy {
+            border: 1px solid #ffd499;
+            background-color: #fff4e5;
+            border-radius: 3px;
+            padding: 10px;
+            margin: 0px 0px 10px 0px;
+            font-size: small;
+            font-style: italic;
+        }
+
+        /* Điều chỉnh nút reply @nickname xuống bên trái, tránh đè lên kí tự khi gõ  */
+        .atk-send-reply {
+            float: left;
+            position: sticky !important;
+            margin-top: 5px !important;
+            margin-left: 10px !important;
+        }
+
+        @media only screen and (max-width: 768px) {
+            .atk-send-reply {
+                position: absolute !important;
+            }
+        }
+
+        /* Tắt hiệu ứng a href khi user điền website, hạn chế spam link rác  */
+        .atk-comment>.atk-avatar img {
+            pointer-events: none !important;
+            cursor: default !important;
+        }
+
+        .atk-item.atk-nick a {
+            pointer-events: none !important;
+            cursor: default !important;
+        }
+
+        /* Gạch gang màu đỏ dưới chân link trong comment (bỏ qua hình ảnh) */
+        .atk-content a:not(.atk-lightbox-img) {
+            color: #28334a !important;
+            border-bottom: 2px solid rgba(236, 69, 72, 0.7);
+        }
+
+        /* Điều chỉnh các comment từ deep 2 trở đi bằng khoảng cách lệch, tác giả support */
+        .atk-comment-children>.atk-comment-wrap {
+            margin-left: -47px !important;
+        }
+
+        .atk-list-comments-wrap>.atk-comment-wrap>.atk-comment>.atk-main>.atk-comment-children {
+            margin-left: 50px !important;
+        }
+
+        @media only screen and (max-width: 768px) {
+            .atk-comment-children>.atk-comment-wrap {
+                margin-left: -47px !important;
+            }
+
+            .atk-list-comments-wrap>.atk-comment-wrap>.atk-comment>.atk-main>.atk-comment-children {
+                margin-left: 0px !important;
+            }
+
+            .atk-list-comments-wrap {
+                margin-left: -30px !important;
+            }
+        }
+
+        /* Điều chỉnh phần [code] bên trong comment */
+        .atk-content pre {
+            display: block;
+            margin: 0px 0px 20px 0px !important;
+        }
+
+        .atk-badge-wrap {
+            display: flex;
+            /* Sử dụng Flexbox để đảm bảo các phần tử con nằm trên cùng một hàng */
+            align-items: center;
+            /* Căn giữa theo chiều dọc nếu cần */
+            gap: 4px;
+            /* Tạo khoảng cách giữa các biểu tượng, có thể thay đổi tùy ý */
+        }
+
+        .atk-verified-icon {
+            display: inline-block;
+            /* Đảm bảo icon được hiển thị inline */
+        }
+
+        .atk-pinned-badge {
+            display: inline-block;
+            /* Đảm bảo icon được hiển thị inline */
+        }
+
         @media (max-width: 600px) {
             body {
                 padding: 10px;
