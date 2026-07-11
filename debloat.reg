@@ -1,11 +1,10 @@
 Windows Registry Editor Version 5.00
 
 ; Phục hồi về mặc định
-[-HKEY_LOCAL_MACHINE\SOFTWARE\Policies\CocCoc]
-[-HKEY_CURRENT_USER\SOFTWARE\Policies\CocCoc]
+[-HKEY_CURRENT_USER\SOFTWARE\Policies\CocCoc_Portable]
 
 ; Cấu hình cài đặt
-[HKEY_CURRENT_USER\SOFTWARE\Policies\CocCoc]
+[HKEY_CURRENT_USER\SOFTWARE\Policies\CocCoc_Portable]
 
 ; Không dùng AI
 "GeminiSettings"=dword:00000001
@@ -178,7 +177,7 @@ Windows Registry Editor Version 5.00
 "DnsOverHttpsMode"="secure"
 "DnsOverHttpsTemplates"="https://iabucttpma.cloudflare-gateway.com/dns-query{?dns}"
 
-[HKEY_CURRENT_USER\SOFTWARE\Policies\CocCoc\URLBlocklist]
+[HKEY_CURRENT_USER\SOFTWARE\Policies\CocCoc_Portable\URLBlocklist]
 "1"="update.coccoc.com"
 "2"="afl.coccoc.com"
 "3"="afdk.coccoc.com"
@@ -193,12 +192,12 @@ Windows Registry Editor Version 5.00
 "12"="display.qc.coccoc.com"
 "13"=".coccoc.com"
 
-[HKEY_CURRENT_USER\SOFTWARE\Policies\CocCoc\URLAllowlist]
+[HKEY_CURRENT_USER\SOFTWARE\Policies\CocCoc_Portable\URLAllowlist]
 "1"=".coccoc.com/search"
 
-[HKEY_CURRENT_USER\SOFTWARE\Policies\CocCoc\ExtensionInstallBlocklist]
+[HKEY_CURRENT_USER\SOFTWARE\Policies\CocCoc_Portable\ExtensionInstallBlocklist]
 "1"="gfgbmghkdjckppeomloefmbphdfmokgd"
 "2"="afaljjbleihmahhpckngondmgohleljb"
 
-[HKEY_CURRENT_USER\SOFTWARE\Policies\CocCoc\ExtensionInstallForcelist]
+[HKEY_CURRENT_USER\SOFTWARE\Policies\CocCoc_Portable\ExtensionInstallForcelist]
 "1"="jaadjnlkjnhohljficgoddcjmndjfdmi"  ; Blank New Tab Page
