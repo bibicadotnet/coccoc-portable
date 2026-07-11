@@ -29,6 +29,8 @@ jobs:
             "Accept"     = "application/json"
         }
 
+        $nextVersion = ""
+
         try {
           Write-Host "Querying for the latest CocCoc version..." -ForegroundColor Yellow
           $resp = Invoke-WebRequest -Uri $updateUrl -Method POST -Body $body -ContentType "application/json" -Headers $headers -UseBasicParsing
@@ -40,52 +42,56 @@ jobs:
 
           if ($updateCheck.status -eq "ok") {
               $nextVersion = $updateCheck.nextversion
-              $directExeUrl = "https://files2.coccoc.com/apps/browser/win/x64/$nextVersion/$($nextVersion)_coccocsetup.exe"
-              Write-Host "Found version: $nextVersion" -ForegroundColor Cyan
-              Write-Host "Direct download link: $directExeUrl" -ForegroundColor Green
-
-              # Create a temporary directory for extraction
-              $tempDir = "$env:TEMP\coccoc_dl"
-              New-Item -ItemType Directory -Path $tempDir -Force | Out-Null
-              $installerPath = "$tempDir\coccocsetup.exe"
-              
-              Write-Host "Downloading the installer..." -ForegroundColor Yellow
-              (New-Object System.Net.WebClient).DownloadFile($directExeUrl, $installerPath)
-
-              # Use 7-Zip available on Github Actions windows-latest to extract the .exe
-              Write-Host "Extracting the exe file..." -ForegroundColor Yellow
-              & "C:\Program Files\7-Zip\7z.exe" x $installerPath "-o$tempDir\ext1" -y | Out-Null
-
-              # Find and extract the inner .7z file (standard Chromium Installer structure)
-              $sevenZFile = Get-ChildItem -Path "$tempDir\ext1" -Filter "*.7z" | Select-Object -First 1
-              if ($sevenZFile) {
-                  Write-Host "Found $($sevenZFile.Name), continuing extraction..." -ForegroundColor Yellow
-                  & "C:\Program Files\7-Zip\7z.exe" x $sevenZFile.FullName "-o$tempDir\ext2" -y | Out-Null
-                  $searchPath = "$tempDir\ext2"
-              } else {
-                  $searchPath = "$tempDir\ext1"
-              }
-
-              # Scan for browser.exe and move the entire structure to the target directory
-              $browserExe = Get-ChildItem -Path $searchPath -Filter "browser.exe" -Recurse | Select-Object -First 1
-              if ($browserExe) {
-                  $sourceAppFolder = $browserExe.Directory.FullName
-                  $targetAppFolder = "C:\Program Files\CocCoc\Browser\Application"
-                  
-                  New-Item -ItemType Directory -Path $targetAppFolder -Force | Out-Null
-                  Copy-Item -Path "$sourceAppFolder\*" -Destination $targetAppFolder -Recurse -Force
-                  Write-Host "Successfully extracted CocCoc structure to: $targetAppFolder" -ForegroundColor Green
-              } else {
-                  Write-Error "browser.exe not found in the extracted package!"
-                  exit 1
-              }
           } else {
-              Write-Error "CocCoc query error: $($updateCheck.status)"
-              exit 1
+              Write-Host "CocCoc query error: $($updateCheck.status). Proceeding to fallback..." -ForegroundColor Yellow
           }
         } catch {
-          Write-Error "Processing error: $($_.Exception.Message)"
-          exit 1
+          Write-Host "Processing error: $($_.Exception.Message). Proceeding to fallback..." -ForegroundColor Yellow
+        }
+
+        if (-not $nextVersion) {
+            $nextVersion = "148.0.7778.260"
+            Write-Host "Using fallback version: $nextVersion" -ForegroundColor Yellow
+        }
+
+        $directExeUrl = "https://files2.coccoc.com/apps/browser/win/x64/$nextVersion/$($nextVersion)_coccocsetup.exe"
+        Write-Host "Found/Target version: $nextVersion" -ForegroundColor Cyan
+        Write-Host "Direct download link: $directExeUrl" -ForegroundColor Green
+
+        # Create a temporary directory for extraction
+        $tempDir = "$env:TEMP\coccoc_dl"
+        New-Item -ItemType Directory -Path $tempDir -Force | Out-Null
+        $installerPath = "$tempDir\coccocsetup.exe"
+        
+        Write-Host "Downloading the installer..." -ForegroundColor Yellow
+        (New-Object System.Net.WebClient).DownloadFile($directExeUrl, $installerPath)
+
+        # Use 7-Zip available on Github Actions windows-latest to extract the .exe
+        Write-Host "Extracting the exe file..." -ForegroundColor Yellow
+        & "C:\Program Files\7-Zip\7z.exe" x $installerPath "-o$tempDir\ext1" -y | Out-Null
+
+        # Find and extract the inner .7z file (standard Chromium Installer structure)
+        $sevenZFile = Get-ChildItem -Path "$tempDir\ext1" -Filter "*.7z" | Select-Object -First 1
+        if ($sevenZFile) {
+            Write-Host "Found $($sevenZFile.Name), continuing extraction..." -ForegroundColor Yellow
+            & "C:\Program Files\7-Zip\7z.exe" x $sevenZFile.FullName "-o$tempDir\ext2" -y | Out-Null
+            $searchPath = "$tempDir\ext2"
+        } else {
+            $searchPath = "$tempDir\ext1"
+        }
+
+        # Scan for browser.exe and move the entire structure to the target directory
+        $browserExe = Get-ChildItem -Path $searchPath -Filter "browser.exe" -Recurse | Select-Object -First 1
+        if ($browserExe) {
+            $sourceAppFolder = $browserExe.Directory.FullName
+            $targetAppFolder = "C:\Program Files\CocCoc\Browser\Application"
+            
+            New-Item -ItemType Directory -Path $targetAppFolder -Force | Out-Null
+            Copy-Item -Path "$sourceAppFolder\*" -Destination $targetAppFolder -Recurse -Force
+            Write-Host "Successfully extracted CocCoc structure to: $targetAppFolder" -ForegroundColor Green
+        } else {
+            Write-Error "browser.exe not found in the extracted package!"
+            exit 1
         }
         
     - name: Get CocCoc version
