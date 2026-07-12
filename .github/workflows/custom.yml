@@ -50,7 +50,7 @@ jobs:
         }
 
         if (-not $nextVersion) {
-            $nextVersion = "148.0.7778.260"
+            $nextVersion = "149.0.7827.206"
             Write-Host "Using fallback version: $nextVersion" -ForegroundColor Yellow
         }
 
