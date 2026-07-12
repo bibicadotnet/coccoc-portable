@@ -23,15 +23,17 @@ jobs:
       run: |
         [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
         $updateUrl = "https://update.coccoc.com/service/update2/json"
-        $body = '{"request":{"@os":"win","@updater":"CocCocUpdater","acceptformat":"crx3,download","protocol":"4.0","os":{"arch":"x86_64","platform":"Windows","version":"10.0"},"updaterversion":"148.0.7778.254","apps":[{"appid":"{C0CC0CBB-47DD-46FF-A04D-7011A06486E1}","version":"0.0.0.0","ap":"arch_x64","updatecheck":{}}]}}'
+        # Updated with the correct native API payload
+        $body = '{"request":{"@os":"win","@updater":"CocCocUpdater","acceptformat":"crx3,download,puff,run,xz,zucc","apps":[{"ap":"arch_x64","appid":"{c0cc0cbb-47dd-46ff-a04d-7011a06486e1}","brand":"XXXX","enabled":true,"installsource":"taggedmi","updatecheck":{"sameversionupdate":true},"version":"0.0.0.0"}],"arch":"x86","ismachine":true,"os":{"arch":"x86_64","platform":"Windows","version":"10.0"},"prodversion":"0.0.0.0","protocol":"4.0","updaterversion":"0.0.0.0","wow64":true}}'
         $headers = @{
-            "User-Agent" = "CocCocUpdater/148.0.7778.254"
+            "User-Agent" = "CocCocUpdater/0.0.0.0"
             "Accept"     = "application/json"
         }
 
         $nextVersion = ""
+        $directExeUrl = ""
 
-        # LAYER 1: Try querying the API
+        # LAYER 1: Query Omaha API using the corrected native payload
         try {
           Write-Host "Querying for the latest CocCoc version..." -ForegroundColor Yellow
           $resp = Invoke-WebRequest -Uri $updateUrl -Method POST -Body $body -ContentType "application/json" -Headers $headers -UseBasicParsing
@@ -41,8 +43,10 @@ jobs:
           $json = $rawContent | ConvertFrom-Json
           $updateCheck = $json.response.apps[0].updatecheck
 
-          if ($updateCheck.status -eq "ok") {
+          if ($updateCheck.status -eq "ok" -and $updateCheck.pipelines) {
               $nextVersion = $updateCheck.nextversion
+              $directExeUrl = $updateCheck.pipelines[0].operations[0].urls[0].url
+              Write-Host "API returned version: $nextVersion" -ForegroundColor Cyan
           } else {
               Write-Host "CocCoc query error: $($updateCheck.status). Proceeding to fallback..." -ForegroundColor Yellow
           }
@@ -51,7 +55,7 @@ jobs:
         }
 
         # LAYER 2: Extract version from coccoc_en_machine.exe and scan for URL
-        if (-not $nextVersion) {
+        if (-not $directExeUrl) {
             Write-Host "Downloading base machine setup to extract version..." -ForegroundColor Yellow
             $machineSetupUrl = "https://files2.coccoc.com/browser/coccoc_en_machine.exe"
             $tempSetupPath = "$env:TEMP\coccoc_en_machine.exe"
@@ -78,6 +82,7 @@ jobs:
                             $req = Invoke-WebRequest -Uri $testUrl -Method Head -UseBasicParsing -ErrorAction Stop
                             if ($req.StatusCode -eq 200) {
                                 $nextVersion = $testVersion
+                                $directExeUrl = $testUrl
                                 Write-Host "`n Found valid URL at: $testVersion" -ForegroundColor Green
                                 break
                             }
@@ -93,12 +98,12 @@ jobs:
         }
 
         # LAYER 3: Ultimate hardcoded fallback if both methods above fail
-        if (-not $nextVersion) {
+        if (-not $directExeUrl) {
             $nextVersion = "149.0.7827.206"
+            $directExeUrl = "https://files2.coccoc.com/apps/browser/win/x64/$nextVersion/$nextVersion`_coccocsetup.exe"
             Write-Host "Using ultimate fallback version: $nextVersion" -ForegroundColor Yellow
         }
 
-        $directExeUrl = "https://files2.coccoc.com/apps/browser/win/x64/$nextVersion/$($nextVersion)_coccocsetup.exe"
         Write-Host "Found/Target version: $nextVersion" -ForegroundColor Cyan
         Write-Host "Direct download link: $directExeUrl" -ForegroundColor Green
 
