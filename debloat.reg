@@ -21,7 +21,6 @@ Windows Registry Editor Version 5.00
 "GeminiActOnWebSettings"=dword:00000001
 
 ; --- TELEMETRY ---
-"PrivacySandboxPromptEnabled"=dword:00000000
 "WebRtcEventLogCollectionAllowed"=dword:00000000
 "UserFeedbackAllowed"=dword:00000000
 "FeedbackSurveysEnabled"=dword:00000000
@@ -203,3 +202,4 @@ Windows Registry Editor Version 5.00
 ; KHÔNG DÙNG (ghi chú)
 ; "SavingBrowserHistoryDisabled"=dword:00000001
 ; "HistorySearchSettings"=dword:00000002
+; "PrivacySandboxPromptEnabled"=dword:00000000 ; Deprecated v149
