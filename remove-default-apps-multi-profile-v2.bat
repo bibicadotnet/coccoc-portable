@@ -5,8 +5,8 @@ chcp 65001 >nul
 :: CONFIGURATION SECTION
 :: ==============================================
 set "app=%~dp0"
-set "BROWSER_NAME=Edge Portable"
-set "BROWSER_ID=EdgePortable"
+set "BROWSER_NAME=Cốc Cốc Portable"
+set "BROWSER_ID=CocCocPortable"
 set "EXE_FILE=%app%edge-guard.exe"
 set "CS_FILE=%app%edge-guard.cs"
 
