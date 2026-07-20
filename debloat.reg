@@ -188,6 +188,7 @@ Windows Registry Editor Version 5.00
 "11"="video.comedia.coccoc.com"
 "12"="display.qc.coccoc.com"
 "13"=".coccoc.com"
+"14"="cdn2.cache.vn"
 
 [HKEY_CURRENT_USER\SOFTWARE\Policies\CocCoc_Portable\URLAllowlist]
 "1"=".coccoc.com/search"
