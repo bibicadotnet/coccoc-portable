@@ -24,18 +24,15 @@ jobs:
         [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
         $updateUrl = "https://update.coccoc.com/service/update2/json"
 
-        $requestId = [guid]::NewGuid().ToString("B")
-        $sessionId = [guid]::NewGuid().ToString("B")
-        $uid       = [guid]::NewGuid().ToString()
-
-        $body = '{"request":{"@os":"win","@updater":"CocCocUpdater","acceptformat":"crx3,download,puff,run,xz,zucc","apps":[{"ap":"arch_x64","appid":"{c0cc0cbb-47dd-46ff-a04d-7011a06486e1}","brand":"GGLS","enabled":true,"installdate":-1,"installsource":"otherinstallcmd","lang":"en","ping":{"ad":-1,"rd":-1},"updatecheck":{"sameversionupdate":true},"version":"0.0.0.0"}],"arch":"x86","dedup":"cr","domainjoined":false,"hw":{"avx":true,"physmemory":8,"sse":true,"sse2":true,"sse3":true,"sse41":true,"sse42":true,"ssse3":true},"ismachine":true,"os":{"arch":"x86_64","platform":"Windows","version":"10.0"},"prodversion":"0.0.0.0","protocol":"4.0","requestid":"' + $requestId + '","sessionid":"' + $sessionId + '","uid":"' + $uid + '","updaterversion":"0.0.0.0","wow64":true}}'
+        $body = '{"request":{"@os":"win","@updater":"CocCocUpdater","acceptformat":"crx3,download,puff,run,xz,zucc","apps":[{"ap":"arch_x64","appid":"{c0cc0cbb-47dd-46ff-a04d-7011a06486e1}","brand":"XXXX","enabled":true,"installsource":"taggedmi","updatecheck":{"sameversionupdate":true},"version":"0.0.0.0"}],"arch":"x86","ismachine":true,"os":{"arch":"x86_64","platform":"Windows","version":"10.0"},"prodversion":"149.0.7827.202","protocol":"4.0","updaterversion":"0.0.0.0","wow64":true}}'
 
         $headers = @{
             "User-Agent" = "CocCocUpdater/0.0.0.0"
             "Accept"     = "application/json"
         }
 
-        $nextVersion = ""
+        $nextVersion = $null
+        $directExeUrl = $null
 
         try {
           Write-Host "Querying for the latest CocCoc version..." -ForegroundColor Yellow
@@ -46,21 +43,26 @@ jobs:
           $json = $rawContent | ConvertFrom-Json
           $updateCheck = $json.response.apps[0].updatecheck
 
-          if ($updateCheck.status -eq "ok") {
+          if ($updateCheck.status -eq "ok" -and $updateCheck.pipelines) {
               $nextVersion = $updateCheck.nextversion
+              $directExeUrl = $updateCheck.pipelines[0].operations[0].urls[0].url
+              
+              if (-not $directExeUrl) {
+                  $directExeUrl = $updateCheck.urls.url[0].codebase
+              }
           } else {
-              Write-Host "CocCoc query error: $($updateCheck.status). Proceeding to fallback..." -ForegroundColor Yellow
+              Write-Host "CocCoc query error or missing pipelines: $($updateCheck.status). Proceeding to fallback..." -ForegroundColor Yellow
           }
         } catch {
           Write-Host "Processing error: $($_.Exception.Message). Proceeding to fallback..." -ForegroundColor Yellow
         }
 
-        if (-not $nextVersion) {
-            $nextVersion = "148.0.7778.260"
+        if (-not $nextVersion -or -not $directExeUrl) {
+            $nextVersion = "149.0.7827.206"
+            $directExeUrl = "https://files2.coccoc.com/apps/browser/win/x64/$nextVersion/$($nextVersion)_coccocsetup.exe"
             Write-Host "Using fallback version: $nextVersion" -ForegroundColor Yellow
         }
 
-        $directExeUrl = "https://files2.coccoc.com/apps/browser/win/x64/$nextVersion/$($nextVersion)_coccocsetup.exe"
         Write-Host "Found/Target version: $nextVersion" -ForegroundColor Cyan
         Write-Host "Direct download link: $directExeUrl" -ForegroundColor Green
 
@@ -76,14 +78,32 @@ jobs:
         Write-Host "Extracting the exe file..." -ForegroundColor Yellow
         & "C:\Program Files\7-Zip\7z.exe" x $installerPath "-o$tempDir\ext1" -y | Out-Null
 
-        # Find and extract the inner .7z file (standard Chromium Installer structure)
-        $sevenZFile = Get-ChildItem -Path "$tempDir\ext1" -Filter "*.7z" | Select-Object -First 1
+        # Find and extract the inner browser.7z (or fallback to setup.exe nested payload)
+        $sevenZFile = Get-ChildItem -Path "$tempDir\ext1" -Filter "browser.7z" -Recurse | Select-Object -First 1
+        
+        if (-not $sevenZFile) {
+            $setupExe = Get-ChildItem -Path "$tempDir\ext1" -Filter "*coccocsetup.exe" -Recurse | Select-Object -First 1
+            if ($setupExe) {
+                Write-Host "Nested setup found: $($setupExe.Name). Extracting inner payload..." -ForegroundColor Yellow
+                & "C:\Program Files\7-Zip\7z.exe" x "$($setupExe.FullName)" "-o$tempDir\ext2_setup" -y | Out-Null
+                $sevenZFile = Get-ChildItem -Path "$tempDir\ext2_setup" -Filter "browser.7z" -Recurse | Select-Object -First 1
+            }
+        }
+
         if ($sevenZFile) {
             Write-Host "Found $($sevenZFile.Name), continuing extraction..." -ForegroundColor Yellow
             & "C:\Program Files\7-Zip\7z.exe" x $sevenZFile.FullName "-o$tempDir\ext2" -y | Out-Null
             $searchPath = "$tempDir\ext2"
         } else {
-            $searchPath = "$tempDir\ext1"
+            # Fallback to older .7z format if browser.7z is still not found
+            $sevenZFallback = Get-ChildItem -Path "$tempDir\ext1" -Filter "*.7z" | Select-Object -First 1
+            if ($sevenZFallback) {
+                Write-Host "Found fallback $($sevenZFallback.Name), continuing extraction..." -ForegroundColor Yellow
+                & "C:\Program Files\7-Zip\7z.exe" x $sevenZFallback.FullName "-o$tempDir\ext2" -y | Out-Null
+                $searchPath = "$tempDir\ext2"
+            } else {
+                $searchPath = "$tempDir\ext1"
+            }
         }
 
         # Scan for browser.exe and move the entire structure to the target directory
