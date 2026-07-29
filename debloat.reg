@@ -77,9 +77,6 @@ Windows Registry Editor Version 5.00
 ; Tắt Gỡ lỗi từ xa
 "RemoteDebuggingAllowed"=dword:00000000
 
-; Tắt Hỗ trợ hồ sơ roaming
-"RoamingProfileSupportEnabled"=dword:00000000
-
 ; Tắt Quét sâu Safe Browsing
 "SafeBrowsingDeepScanningEnabled"=dword:00000000
 
@@ -204,3 +201,4 @@ Windows Registry Editor Version 5.00
 ; "SavingBrowserHistoryDisabled"=dword:00000001
 ; "HistorySearchSettings"=dword:00000002
 ; "PrivacySandboxPromptEnabled"=dword:00000000 ; Deprecated v149
+; "RoamingProfileSupportEnabled"=dword:00000000 ; Deprecated v50
