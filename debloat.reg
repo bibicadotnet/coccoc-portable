@@ -29,7 +29,6 @@ Windows Registry Editor Version 5.00
 ; --- BLOAT & ANNOYANCES ---
 "HideWebStoreIcon"=dword:00000001
 "AllowDinosaurEasterEgg"=dword:00000000
-"ComponentUpdatesEnabled"=dword:00000000
 "SideSearchEnabled"=dword:00000000
 "DesktopSharingHubEnabled"=dword:00000000
 "EnableMediaRouter"=dword:00000000
@@ -202,3 +201,4 @@ Windows Registry Editor Version 5.00
 ; "HistorySearchSettings"=dword:00000002
 ; "PrivacySandboxPromptEnabled"=dword:00000000 ; Deprecated v149
 ; "RoamingProfileSupportEnabled"=dword:00000000 ; Deprecated v50
+; "ComponentUpdatesEnabled"=dword:00000000
